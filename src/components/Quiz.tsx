@@ -115,8 +115,8 @@ export const Quiz: React.FC<Props> = ({ selectedFormOptions }) => {
         <div className="content">
           <List>
           <div className="notification is-warning"><AnswerListElm className="subtitle is-3"><Input id="first" className="is-primary" type="checkbox"/><Label htmlFor="first"> Coffee</Label></AnswerListElm></div>
-          <div className="notification is-warning"><AnswerListElm className="subtitle is-3"><Input type="checkbox"/> Coffee</AnswerListElm></div>
-          <div className="notification is-warning"><AnswerListElm className="subtitle is-3"><Input type="checkbox"/> Coffee</AnswerListElm></div>
+          <div className="notification is-warning"><AnswerListElm className="subtitle is-3"><Input id="second" type="checkbox"/><Label htmlFor="second"> Coffee</Label></AnswerListElm></div>
+          <div className="notification is-warning"><AnswerListElm className="subtitle is-3"><Input id="third" type="checkbox"/><Label htmlFor="third"> Coffee</Label></AnswerListElm></div>
           </List>
         </div>
       </div>
