@@ -1,6 +1,5 @@
-import React, { useState, SetStateAction, useReducer, ChangeEvent, useEffect } from 'react'
+import React, { useState, useReducer, ChangeEvent } from 'react'
 import styled from 'styled-components'
-import { Link } from 'react-router-dom'
 import { SelectCategory } from './components/SelectCategory'
 import { AppContainer, ButtonContainer } from '../../styled/components/GlobalComponents'
 import { Quiz } from '../Quiz'

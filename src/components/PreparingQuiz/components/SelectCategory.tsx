@@ -1,10 +1,9 @@
-import React, { useEffect, useState, Dispatch, SetStateAction, ChangeEvent } from 'react'
+import React, { useEffect, useState, ChangeEvent } from 'react'
 import {
   Label,
   SelectInput,
   SelectInputContainer,
 } from '../../../styled/components/GlobalComponents'
-import useStatus from '../../../hooks/useStatus'
 
 const baseURL = 'https://opentdb.com/api_category.php'
 
