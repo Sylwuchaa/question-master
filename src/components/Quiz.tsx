@@ -84,10 +84,7 @@ export const Quiz: React.FC<Props> = ({ selectedFormOptions }) => {
       const response = await fetch(url)
       const questionsData = await response.json()
       console.log(questionsData)
-      return (
-        setQuestionsData(questionsData.results),
-        setStatus(false)
-      ) 
+      return setQuestionsData(questionsData.results), setStatus(false)
     } catch (err) {
       console.log(err)
     }
@@ -106,7 +103,9 @@ export const Quiz: React.FC<Props> = ({ selectedFormOptions }) => {
         <h1 className="title">1/{selectedFormOptions.numberOfQuestion}</h1>
         <QuizContainer className="card">
           <Header className="card-header">
-  <div className="notification is-primary">{loading ? "Loading . . . " : renderQuestionsData()}</div>
+            <div className="notification is-primary">
+              {loading ? 'Loading . . . ' : renderQuestionsData()}
+            </div>
           </Header>
           <div className="card-content">
             <div className="content">
@@ -119,12 +118,14 @@ export const Quiz: React.FC<Props> = ({ selectedFormOptions }) => {
                 </div>
                 <div className="notification is-warning">
                   <AnswerListElm className="subtitle is-3">
-                    <Input type="checkbox" /> Coffee
+                    <Input id="second" type="checkbox" />
+                    <Label htmlFor="second"> Coffee</Label>
                   </AnswerListElm>
                 </div>
                 <div className="notification is-warning">
                   <AnswerListElm className="subtitle is-3">
-                    <Input type="checkbox" /> Coffee
+                    <Input id="third" type="checkbox" />
+                    <Label htmlFor="third"> Coffee</Label>
                   </AnswerListElm>
                 </div>
               </List>
