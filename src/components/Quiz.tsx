@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import { AppContainer, ButtonContainer } from '../styled/components/GlobalComponents'
 import { Link } from 'react-router-dom'
 import { useQuizReducer } from '../hooks/useQuizReducer'
+import { stat } from 'fs'
 
 const QuizContainer = styled.div`
   display: flex;
@@ -93,10 +94,46 @@ export const Quiz: React.FC<Props> = ({ selectedFormOptions }) => {
 
   const { state, dispatch } = useQuizReducer(selectedFormOptions)
 
-  const renderQuestionsData = () => {
+  useEffect(() => {
+    theShuffledArrayOfQuestions();
+  }, [state.questionData])
 
+
+
+  const theShuffledArrayOfQuestions = async () => {
+    let arrayOfIncorrectAnswers = await state.questionData[state.activeQuestion].incorrect_answers
+    console.log(arrayOfIncorrectAnswers)
+    const correctAnswer = await state.questionData[state.activeQuestion].correct_answer
+
+    arrayOfIncorrectAnswers = [...arrayOfIncorrectAnswers, ...correctAnswer]
+    console.log('First' + arrayOfIncorrectAnswers)
+
+    const shuffle = (array: Array<string>) => {
+      var random = array.map(Math.random);
+      array.sort(function(a, b) {
+        return random[array.indexOf(a)] - random[array.indexOf(b)];
+      });
+    }
+
+    return dispatch({
+      type: 'NEW_ANSWERS_ARRAY',
+      payload: arrayOfIncorrectAnswers.sort(() => Math.random() - 0.5),
+    })
+  }
+
+  const randerAnswerListElement = () => {
+    return state.shuffleAnswers.map((answer: string, index: number) => (
+      <div className="notification is-warning">
+        <AnswerListElm className="subtitle is-3">
+          <Input id={`elem${index}`} className="is-primary" type="checkbox" />
+          <Label htmlFor={`elem${index}`}> {answer}</Label>
+        </AnswerListElm>
+      </div>
+    ))
+  }
+
+  const renderQuestionsData = () => {
     return <h3 className="title is-3">{state.questionData[state.activeQuestion].question}</h3>
-    
   }
 
   return (
@@ -113,10 +150,11 @@ export const Quiz: React.FC<Props> = ({ selectedFormOptions }) => {
           <div className="card-content">
             <div className="content">
               <List>
-                <div className="notification is-warning">
+                {randerAnswerListElement()}
+                {/* <div className="notification is-warning">
                   <AnswerListElm className="subtitle is-3">
                     <Input id="first" className="is-primary" type="checkbox" />
-                    <Label htmlFor="first"> {state.questionData[state.activeQuestion].correct_answer}</Label>
+                    <Label htmlFor="first"></Label>
                   </AnswerListElm>
                 </div>
                 <div className="notification is-warning">
@@ -136,7 +174,7 @@ export const Quiz: React.FC<Props> = ({ selectedFormOptions }) => {
                   <Input id="third" type="checkbox" />
                   <Label htmlFor="third"> Coffee</Label>
                 </AnswerListElm>
-              </div>
+              </div> */}
               </List>
             </div>
           </div>

@@ -5,6 +5,7 @@ const QUIZ_STATE = {
     activeQuestion: 0,
     loading: true,
     error: '',
+    shuffleAnswers: [], 
     questionData: [
         {
             category: '',
@@ -30,6 +31,7 @@ interface QUIZ_STATE {
     activeQuestion: number,
     loading: boolean,
     error: string,
+    shuffleAnswers: Array<string>, 
     questionData: QuestionData[],
 }
 
@@ -48,16 +50,21 @@ const reducer = (state: QUIZ_STATE, action: any) => {
                 loading: false,
                 error: 'Something wants wrong!'
             };
-        case "INCREMENT_ACTIVE_QUESTION":
+        case 'INCREMENT_ACTIVE_QUESTION':
             return {
                 ...state,
-                activeQueestion: (state.activeQuestion + 1)
+                activeQuestion: (state.activeQuestion + 1)
             }
-        case "DECREMENT_ACTIVE_QUESTION":
+        case 'DECREMENT_ACTIVE_QUESTION':
             return {
                 ...state,
-                activeQueestion: (state.activeQuestion - 1)
-            }    
+                activeQuestion: (state.activeQuestion - 1)
+            } 
+        case 'NEW_ANSWERS_ARRAY':
+            return {
+                ...state,
+                shuffleAnswers: action.payload
+            }       
         default:
             return state
                 
@@ -74,7 +81,7 @@ export function useQuizReducer(preparingQuiz: PrepareData) {
             getQuestions(baseURL)
         }
         
-    }, [preparingQuiz]);
+    }, []);
 
     const getQuestions = async (url: string) => {
         try {
