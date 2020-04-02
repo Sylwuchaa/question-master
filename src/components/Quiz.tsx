@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { AppContainer, ButtonContainer } from '../styled/components/GlobalComponents'
 import { Link } from 'react-router-dom'
+import { useQuizReducer } from '../hooks/useQuizReducer'
 
 const QuizContainer = styled.div`
   display: flex;
@@ -9,7 +10,7 @@ const QuizContainer = styled.div`
   justify-content: center;
   align-items: center;
   width: 40%;
-  height: 40%;
+  height: 50%;
 `
 const AnswerListElm = styled.li`
   text-decoration: none;
@@ -51,49 +52,51 @@ interface Props {
   selectedFormOptions: FormOptions
 }
 
-type QuestionData = {
-  category: string
-  type: string
-  difficullty: string
-  question: string
-  correct_answer: string
-  incorrect_answers: Array<string>
-}
+// type QuestionData = {
+//   category: string
+//   type: string
+//   difficullty: string
+//   question: string
+//   correct_answer: string
+//   incorrect_answers: Array<string>
+// }
 
-type Data = QuestionData[]
+// type Data = QuestionData[]
 
 export const Quiz: React.FC<Props> = ({ selectedFormOptions }) => {
-  const [loading, setStatus] = useState<boolean>(true)
-  const [questionsData, setQuestionsData] = useState<Data>()
+  // const [loading, setStatus] = useState<boolean>(true)
+  // const [questionsData, setQuestionsData] = useState<Data>()
 
-  useEffect(() => {
-    prepareBaseUrl(selectedFormOptions)
-  }, [])
+  // useEffect(() => {
+  //   prepareBaseUrl(selectedFormOptions)
+  // }, [])
 
-  const prepareBaseUrl = (selectedFormOptions: FormOptions) => {
-    console.log(selectedFormOptions)
-    if (selectedFormOptions) {
-      const baseURL = `https://opentdb.com/api.php?amount=${selectedFormOptions.numberOfQuestion}`
-      getQuestions(baseURL)
-    }
-    return null
-  }
+  // const prepareBaseUrl = (selectedFormOptions: FormOptions) => {
+  //   console.log(selectedFormOptions)
+  //   if (selectedFormOptions) {
+  //     const baseURL = `https://opentdb.com/api.php?amount=${selectedFormOptions.numberOfQuestion}`
+  //     getQuestions(baseURL)
+  //   }
+  //   return null
+  // }
 
-  const getQuestions = async (url: string) => {
-    try {
-      const response = await fetch(url)
-      const questionsData = await response.json()
-      console.log(questionsData)
-      return setQuestionsData(questionsData.results), setStatus(false)
-    } catch (err) {
-      console.log(err)
-    }
-  }
+  // const getQuestions = async (url: string) => {
+  //   try {
+  //     const response = await fetch(url)
+  //     const questionsData = await response.json()
+  //     console.log(questionsData)
+  //     return setQuestionsData(questionsData.results), setStatus(false)
+  //   } catch (err) {
+  //     console.log(err)
+  //   }
+  // }
+
+  const { state, dispatch } = useQuizReducer(selectedFormOptions)
 
   const renderQuestionsData = () => {
-    if (questionsData !== undefined) {
-      return <h3 className="title is-3">{questionsData[0].question}</h3>
-    }
+
+    return <h3 className="title is-3">{state.questionData[state.activeQuestion].question}</h3>
+    
   }
 
   return (
@@ -104,7 +107,7 @@ export const Quiz: React.FC<Props> = ({ selectedFormOptions }) => {
         <QuizContainer className="card">
           <Header className="card-header">
             <div className="notification is-primary">
-              {loading ? 'Loading . . . ' : renderQuestionsData()}
+              {state.loading ? 'Loading . . . ' : renderQuestionsData()}
             </div>
           </Header>
           <div className="card-content">
@@ -113,7 +116,7 @@ export const Quiz: React.FC<Props> = ({ selectedFormOptions }) => {
                 <div className="notification is-warning">
                   <AnswerListElm className="subtitle is-3">
                     <Input id="first" className="is-primary" type="checkbox" />
-                    <Label htmlFor="first"> Coffee</Label>
+                    <Label htmlFor="first"> {state.questionData[state.activeQuestion].correct_answer}</Label>
                   </AnswerListElm>
                 </div>
                 <div className="notification is-warning">
@@ -128,6 +131,12 @@ export const Quiz: React.FC<Props> = ({ selectedFormOptions }) => {
                     <Label htmlFor="third"> Coffee</Label>
                   </AnswerListElm>
                 </div>
+                <div className="notification is-warning">
+                <AnswerListElm className="subtitle is-3">
+                  <Input id="third" type="checkbox" />
+                  <Label htmlFor="third"> Coffee</Label>
+                </AnswerListElm>
+              </div>
               </List>
             </div>
           </div>
