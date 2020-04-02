@@ -5,6 +5,7 @@ const QUIZ_STATE = {
     activeQuestion: 0,
     loading: true,
     error: '',
+    millisecondsRemaining: 1300,
     shuffleAnswers: [],
     questionData: [
         {
@@ -31,8 +32,13 @@ interface QUIZ_STATE {
     activeQuestion: number,
     loading: boolean,
     error: string,
+    millisecondsRemaining: number,
     shuffleAnswers: Array<string>,
     questionData: QuestionData[],
+}
+
+interface Action {
+
 }
 
 
@@ -50,21 +56,26 @@ const reducer = (state: QUIZ_STATE, action: any) => {
                 loading: false,
                 error: 'Something wants wrong!'
             };
-        case "INCREMENT_ACTIVE_QUESTION":
+        case 'INCREMENT_ACTIVE_QUESTION':
             return {
                 ...state,
                 activeQuestion: (state.activeQuestion + 1)
             };
-        case "DECREMENT_ACTIVE_QUESTION":
+        case 'DECREMENT_ACTIVE_QUESTION':
             return {
                 ...state,
                 activeQuestion: (state.activeQuestion - 1)
             };
-        case "NEW_ANSWERS_ARRAY":
+        case 'NEW_ANSWERS_ARRAY':
             return {
                 ...state,
                 shuffleAnswers: action.payload
-            };   
+            };
+        case 'START_TIME_REMAINING': 
+            return {
+                ...state,
+                millisecondsRemaining: (state.millisecondsRemaining - 1)
+            };
         default:
             return state
                 

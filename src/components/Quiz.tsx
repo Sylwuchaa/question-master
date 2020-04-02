@@ -59,6 +59,15 @@ export const Quiz: React.FC<Props> = ({ selectedFormOptions }) => {
     theShuffledArrayOfAnswers()
   }, [state.questionData, state.activeQuestion])
 
+  useEffect(() => {
+    setTimeout(() => {
+      if (state.millisecondsRemaining >= 0) {
+        return dispatch({type: 'START_TIME_REMAINING'})
+      }
+      return null;
+    }, 1)
+  }, [state.millisecondsRemaining, state.activeQuestion])
+
   const theShuffledArrayOfAnswers = async () => {
     let arrayOfIncorrectAnswers = await state.questionData[state.activeQuestion].incorrect_answers
     const correctAnswer = await state.questionData[state.activeQuestion].correct_answer
@@ -94,7 +103,7 @@ export const Quiz: React.FC<Props> = ({ selectedFormOptions }) => {
 
   return (
     <>
-      <progress className="progress is-danger is-large" value={23} max="5000"></progress>
+      <progress className="progress is-danger is-large" value={state.millisecondsRemaining} max="1300"></progress>
       <AppContainer>
         <h1 className="title">
           {state.activeQuestion + 1}/{selectedFormOptions.numberOfQuestion}
@@ -122,12 +131,12 @@ export const Quiz: React.FC<Props> = ({ selectedFormOptions }) => {
             </button>
           </Link>
         </ButtonContainer>
-        <progress
-          className="progress is-success is-medium"
+      </AppContainer>
+      <progress
+          className="progress is-success is-large"
           value={state.activeQuestion + 1}
           max={selectedFormOptions.numberOfQuestion}
         ></progress>
-      </AppContainer>
     </>
   )
 }
