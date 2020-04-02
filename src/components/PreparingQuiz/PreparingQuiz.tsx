@@ -31,7 +31,7 @@ const SelectInputContainer = styled.div`
   text-align: center;
   text-align-last: center;
 `
-interface State {
+export interface PrepareData {
   numberOfQuestion: string
   difficulty: string
   typeOfQuiz: string
@@ -45,7 +45,7 @@ const INITIAL_STATE = {
   selectedCategory: '',
 }
 
-const inputsReducer = (state: State, { field, value }: any) => {
+const inputsReducer = (state: PrepareData, { field, value }: any) => {
   return {
     ...state,
     [field]: value,
@@ -76,7 +76,7 @@ export const PreparingQuiz: React.FC = () => {
           placeholder="Between 1 to 50"
           value={inputsValue.numberOfQuestion}
           onChange={handleOnChangeInputs}
-          required
+          required={true}
         />
         <InputContainer>
           <SelectCategory
