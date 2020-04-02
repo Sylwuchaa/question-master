@@ -15,13 +15,16 @@ type DataObject = {
 type Data = DataObject[]
 
 interface SelectCategory {
-  handleOnChangeCategory: (event: ChangeEvent<HTMLSelectElement>) => void,
-  categoryValue: string,
+  handleOnChangeCategory: (event: ChangeEvent<HTMLSelectElement>) => void
+  categoryValue: string
 }
 
-export const SelectCategory: React.FC<SelectCategory> = ({ handleOnChangeCategory, categoryValue }) => {
+export const SelectCategory: React.FC<SelectCategory> = ({
+  handleOnChangeCategory,
+  categoryValue,
+}) => {
   const [categories, getCategoriesType] = useState<Data>()
-  const [loading, setStatus] = useState<boolean>(true);
+  const [loading, setStatus] = useState<boolean>(true)
   useEffect(() => {
     getCategory()
   }, [])
@@ -32,10 +35,7 @@ export const SelectCategory: React.FC<SelectCategory> = ({ handleOnChangeCategor
       const categoryData = await response.json()
       getCategoriesType(categoryData.trivia_categories)
 
-      return (
-        getCategoriesType(categoryData.trivia_categories),
-        setStatus(false)
-      )
+      return getCategoriesType(categoryData.trivia_categories), setStatus(false)
     } catch (err) {
       console.log(err)
     }
@@ -44,20 +44,23 @@ export const SelectCategory: React.FC<SelectCategory> = ({ handleOnChangeCategor
   const renderCategoryList = () => {
     if (categories != null) {
       return categories.map((category: DataObject) => (
-        <option key={category.id+category.name} value={category.id}>{category.name}</option>
+        <option key={category.id + category.name} value={category.id}>
+          {category.name}
+        </option>
       ))
     }
   }
-  console.log(loading);
+
   return (
     <>
       <Label htmlFor="selectCategory">Select Category:</Label>
       <SelectInputContainer className={loading ? 'select is-info is-loading' : 'select is-info'}>
-        <SelectInput 
+        <SelectInput
           id="selectCategory"
           onChange={handleOnChangeCategory}
           value={categoryValue}
-          name="selectedCategory">
+          name="selectedCategory"
+        >
           <option>Any Category</option>
           {renderCategoryList()}
         </SelectInput>

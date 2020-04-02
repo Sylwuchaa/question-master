@@ -10,7 +10,7 @@ const QuizContainer = styled.div`
   justify-content: center;
   align-items: center;
   width: 40%;
-  height: 50%;
+  height: 55%;
 `
 const AnswerListElm = styled.li`
   text-decoration: none;
@@ -52,103 +52,79 @@ interface Props {
   selectedFormOptions: FormOptions
 }
 
-// type QuestionData = {
-//   category: string
-//   type: string
-//   difficullty: string
-//   question: string
-//   correct_answer: string
-//   incorrect_answers: Array<string>
-// }
-
-// type Data = QuestionData[]
-
 export const Quiz: React.FC<Props> = ({ selectedFormOptions }) => {
-  // const [loading, setStatus] = useState<boolean>(true)
-  // const [questionsData, setQuestionsData] = useState<Data>()
-
-  // useEffect(() => {
-  //   prepareBaseUrl(selectedFormOptions)
-  // }, [])
-
-  // const prepareBaseUrl = (selectedFormOptions: FormOptions) => {
-  //   console.log(selectedFormOptions)
-  //   if (selectedFormOptions) {
-  //     const baseURL = `https://opentdb.com/api.php?amount=${selectedFormOptions.numberOfQuestion}`
-  //     getQuestions(baseURL)
-  //   }
-  //   return null
-  // }
-
-  // const getQuestions = async (url: string) => {
-  //   try {
-  //     const response = await fetch(url)
-  //     const questionsData = await response.json()
-  //     console.log(questionsData)
-  //     return setQuestionsData(questionsData.results), setStatus(false)
-  //   } catch (err) {
-  //     console.log(err)
-  //   }
-  // }
-
   const { state, dispatch } = useQuizReducer(selectedFormOptions)
 
-  const renderQuestionsData = () => {
+  useEffect(() => {
+    theShuffledArrayOfAnswers()
+  }, [state.questionData, state.activeQuestion])
 
+  const theShuffledArrayOfAnswers = async () => {
+    let arrayOfIncorrectAnswers = await state.questionData[state.activeQuestion].incorrect_answers
+    const correctAnswer = await state.questionData[state.activeQuestion].correct_answer
+
+    arrayOfIncorrectAnswers = [...arrayOfIncorrectAnswers, correctAnswer]
+
+    return dispatch({
+      type: 'NEW_ANSWERS_ARRAY',
+      payload: arrayOfIncorrectAnswers.sort(() => Math.random() - 0.5),
+    })
+  }
+
+  const randerAnswerListElement = () => {
+    console.log(state.shuffleAnswers)
+    return state.shuffleAnswers.map((answer: string, index: number) => (
+      <div key={answer + index} className="notification is-warning is-loading">
+        <AnswerListElm className="subtitle is-3">
+          <Input id={`elem${index}`} className="is-primary" type="checkbox" />
+          <Label htmlFor={`elem${index}`}> {answer}</Label>
+        </AnswerListElm>
+      </div>
+    ))
+  }
+
+  const handleNextButton = () => {
+    console.log(state.activeQuestion)
+    dispatch({ type: 'INCREMENT_ACTIVE_QUESTION' })
+  }
+
+  const renderQuestionsData = () => {
     return <h3 className="title is-3">{state.questionData[state.activeQuestion].question}</h3>
-    
   }
 
   return (
     <>
       <progress className="progress is-danger is-large" value={23} max="5000"></progress>
       <AppContainer>
-        <h1 className="title">1/{selectedFormOptions.numberOfQuestion}</h1>
+        <h1 className="title">
+          {state.activeQuestion + 1}/{selectedFormOptions.numberOfQuestion}
+        </h1>
         <QuizContainer className="card">
           <Header className="card-header">
             <div className="notification is-primary">
-              {state.loading ? 'Loading . . . ' : renderQuestionsData()}
+              {state.loading ? <h3 className="title is-3">Loading. . .</h3> : renderQuestionsData()}
             </div>
           </Header>
           <div className="card-content">
             <div className="content">
-              <List>
-                <div className="notification is-warning">
-                  <AnswerListElm className="subtitle is-3">
-                    <Input id="first" className="is-primary" type="checkbox" />
-                    <Label htmlFor="first"> {state.questionData[state.activeQuestion].correct_answer}</Label>
-                  </AnswerListElm>
-                </div>
-                <div className="notification is-warning">
-                  <AnswerListElm className="subtitle is-3">
-                    <Input id="second" type="checkbox" />
-                    <Label htmlFor="second"> Coffee</Label>
-                  </AnswerListElm>
-                </div>
-                <div className="notification is-warning">
-                  <AnswerListElm className="subtitle is-3">
-                    <Input id="third" type="checkbox" />
-                    <Label htmlFor="third"> Coffee</Label>
-                  </AnswerListElm>
-                </div>
-                <div className="notification is-warning">
-                <AnswerListElm className="subtitle is-3">
-                  <Input id="third" type="checkbox" />
-                  <Label htmlFor="third"> Coffee</Label>
-                </AnswerListElm>
-              </div>
-              </List>
+              {state.loading ? (
+                <AnswerListElm className="subtitle is-3">Loading. . . </AnswerListElm>
+              ) : (
+                <List>{randerAnswerListElement()}</List>
+              )}
             </div>
           </div>
         </QuizContainer>
         <ButtonContainer>
           <Link to="/preparingQuiz">
-            <button className="button is-primary is-large is-rounded">Next !</button>
+            <button onClick={handleNextButton} className="button is-primary is-large is-rounded">
+              Next !
+            </button>
           </Link>
         </ButtonContainer>
         <progress
           className="progress is-success is-medium"
-          value={1}
+          value={state.activeQuestion + 1}
           max={selectedFormOptions.numberOfQuestion}
         ></progress>
       </AppContainer>
