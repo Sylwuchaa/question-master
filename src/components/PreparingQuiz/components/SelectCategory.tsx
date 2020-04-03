@@ -40,7 +40,6 @@ export const SelectCategory: React.FC<SelectCategory> = ({
       console.log(err)
     }
   }
-
   const renderCategoryList = () => {
     if (categories != null) {
       return categories.map((category: DataObject) => (
