@@ -1,4 +1,4 @@
-import React, { useReducer, useState, useEffect } from 'react';
+import { useReducer, useEffect } from 'react';
 import { PrepareData } from '../components/PreparingQuiz/PreparingQuiz';
 
 const QUIZ_STATE = {
@@ -76,6 +76,11 @@ const reducer = (state: QUIZ_STATE, action: any) => {
                 ...state,
                 millisecondsRemaining: (state.millisecondsRemaining - 1)
             };
+        case 'RESET_TIME_REMAINING':
+        return {
+            ...state,
+            millisecondsRemaining: 1300
+        }
         default:
             return state
                 
@@ -87,7 +92,7 @@ export function useQuizReducer(preparingQuiz: PrepareData) {
     const [ state, dispatch ] = useReducer(reducer, QUIZ_STATE);
 
     useEffect(() => {
-        if (preparingQuiz.numberOfQuestion != '') {
+        if (preparingQuiz.numberOfQuestion !== '') {
             const baseURL = `https://opentdb.com/api.php?amount=${preparingQuiz.numberOfQuestion}`
             getQuestions(baseURL)
         }

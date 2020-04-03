@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import styled from 'styled-components'
 import { AppContainer, ButtonContainer } from '../styled/components/GlobalComponents'
 import { Link } from 'react-router-dom'
@@ -60,13 +60,26 @@ export const Quiz: React.FC<Props> = ({ selectedFormOptions }) => {
   }, [state.questionData, state.activeQuestion])
 
   useEffect(() => {
-    setTimeout(() => {
-      if (state.millisecondsRemaining >= 0) {
-        return dispatch({type: 'START_TIME_REMAINING'})
-      }
-      return null;
+    const timer = setTimeout(() => {
+      handleForStartTimeRemaining()
     }, 1)
+
+    return () => {
+      clearTimeout(timer)
+    }
   }, [state.millisecondsRemaining, state.activeQuestion])
+
+  const handleForStartTimeRemaining = () => {
+    if (state.millisecondsRemaining > 0) {
+      return dispatch({ type: 'START_TIME_REMAINING' })
+    }
+
+    if (state.millisecondsRemaining === 0) {
+      return handleNextButton()
+    }
+
+    return null
+  }
 
   const theShuffledArrayOfAnswers = async () => {
     let arrayOfIncorrectAnswers = await state.questionData[state.activeQuestion].incorrect_answers
@@ -81,7 +94,6 @@ export const Quiz: React.FC<Props> = ({ selectedFormOptions }) => {
   }
 
   const randerAnswerListElement = () => {
-    console.log(state.shuffleAnswers)
     return state.shuffleAnswers.map((answer: string, index: number) => (
       <div key={answer + index} className="notification is-warning is-loading">
         <AnswerListElm className="subtitle is-3">
@@ -93,8 +105,8 @@ export const Quiz: React.FC<Props> = ({ selectedFormOptions }) => {
   }
 
   const handleNextButton = () => {
-    console.log(state.activeQuestion)
     dispatch({ type: 'INCREMENT_ACTIVE_QUESTION' })
+    dispatch({ type: 'RESET_TIME_REMAINING' })
   }
 
   const renderQuestionsData = () => {
@@ -103,7 +115,11 @@ export const Quiz: React.FC<Props> = ({ selectedFormOptions }) => {
 
   return (
     <>
-      <progress className="progress is-danger is-large" value={state.millisecondsRemaining} max="1300"></progress>
+      <progress
+        className="progress is-danger is-large"
+        value={state.millisecondsRemaining}
+        max="1300"
+      />
       <AppContainer>
         <h1 className="title">
           {state.activeQuestion + 1}/{selectedFormOptions.numberOfQuestion}
@@ -133,10 +149,10 @@ export const Quiz: React.FC<Props> = ({ selectedFormOptions }) => {
         </ButtonContainer>
       </AppContainer>
       <progress
-          className="progress is-success is-large"
-          value={state.activeQuestion + 1}
-          max={selectedFormOptions.numberOfQuestion}
-        ></progress>
+        className="progress is-success is-large"
+        value={state.activeQuestion + 1}
+        max={selectedFormOptions.numberOfQuestion}
+      ></progress>
     </>
   )
 }
