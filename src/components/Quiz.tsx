@@ -1,8 +1,7 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useContext } from 'react'
 import styled from 'styled-components'
 import { AppContainer, ButtonContainer } from '../styled/components/GlobalComponents'
-import { Link } from 'react-router-dom'
-import { useQuizReducer } from '../hooks/useQuizReducer'
+import { GlobalContext } from '../App'
 
 const QuizContainer = styled.div`
   display: flex;
@@ -42,22 +41,13 @@ const Input = styled.input`
 const Label = styled.label`
   cursor: pointer;
 `
-type FormOptions = {
-  numberOfQuestion: string
-  difficulty: string
-  typeOfQuiz: string
-  selectedCategory: string
-}
-interface Props {
-  selectedFormOptions: FormOptions
-}
 
-export const Quiz: React.FC<Props> = ({ selectedFormOptions }) => {
-  const { state, dispatch } = useQuizReducer(selectedFormOptions)
-
+export const Quiz: React.FC = () => {
+  const globalContext = useContext(GlobalContext)
+  const { quizState, quizDispatch, initialState } = globalContext
   useEffect(() => {
     theShuffledArrayOfAnswers()
-  }, [state.questionData, state.activeQuestion])
+  }, [quizState.questionData, quizState.activeQuestion])
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -67,14 +57,14 @@ export const Quiz: React.FC<Props> = ({ selectedFormOptions }) => {
     return () => {
       clearTimeout(timer)
     }
-  }, [state.millisecondsRemaining, state.activeQuestion])
+  }, [quizState.millisecondsRemaining, quizState.activeQuestion])
 
   const handleForStartTimeRemaining = () => {
-    if (state.millisecondsRemaining > 0) {
-      return dispatch({ type: 'START_TIME_REMAINING' })
+    if (quizState.millisecondsRemaining > 0) {
+      return quizDispatch({ type: 'START_TIME_REMAINING' })
     }
 
-    if (state.millisecondsRemaining === 0) {
+    if (quizState.millisecondsRemaining === 0) {
       return handleNextButton()
     }
 
@@ -82,19 +72,19 @@ export const Quiz: React.FC<Props> = ({ selectedFormOptions }) => {
   }
 
   const theShuffledArrayOfAnswers = async () => {
-    let arrayOfIncorrectAnswers = await state.questionData[state.activeQuestion].incorrect_answers
-    const correctAnswer = await state.questionData[state.activeQuestion].correct_answer
+    let arrayOfIncorrectAnswers = await quizState.questionData[quizState.activeQuestion].incorrect_answers
+    const correctAnswer = await quizState.questionData[quizState.activeQuestion].correct_answer
 
     arrayOfIncorrectAnswers = [...arrayOfIncorrectAnswers, correctAnswer]
 
-    return dispatch({
+    return quizDispatch({
       type: 'NEW_ANSWERS_ARRAY',
       payload: arrayOfIncorrectAnswers.sort(() => Math.random() - 0.5),
     })
   }
 
   const randerAnswerListElement = () => {
-    return state.shuffleAnswers.map((answer: string, index: number) => (
+    return quizState.shuffleAnswers.map((answer: string, index: number) => (
       <div key={answer + index} className="notification is-warning is-loading">
         <AnswerListElm className="subtitle is-3">
           <Input id={`elem${index}`} className="is-primary" type="checkbox" />
@@ -105,34 +95,34 @@ export const Quiz: React.FC<Props> = ({ selectedFormOptions }) => {
   }
 
   const handleNextButton = () => {
-    dispatch({ type: 'INCREMENT_ACTIVE_QUESTION' })
-    dispatch({ type: 'RESET_TIME_REMAINING' })
+    quizDispatch({ type: 'INCREMENT_ACTIVE_QUESTION' })
+    quizDispatch({ type: 'RESET_TIME_REMAINING' })
   }
 
   const renderQuestionsData = () => {
-    return <h3 className="title is-3">{state.questionData[state.activeQuestion].question}</h3>
+    return <h3 className="title is-3">{quizState.questionData[quizState.activeQuestion].question}</h3>
   }
 
   return (
     <>
       <progress
         className="progress is-danger is-large"
-        value={state.millisecondsRemaining}
+        value={quizState.millisecondsRemaining}
         max="1300"
       />
       <AppContainer>
         <h1 className="title">
-          {state.activeQuestion + 1}/{selectedFormOptions.numberOfQuestion}
+          {quizState.activeQuestion + 1}/{initialState.numberOfQuestion}
         </h1>
         <QuizContainer className="card">
           <Header className="card-header">
             <div className="notification is-primary">
-              {state.loading ? <h3 className="title is-3">Loading. . .</h3> : renderQuestionsData()}
+              {quizState.loading ? <h3 className="title is-3">Loading. . .</h3> : renderQuestionsData()}
             </div>
           </Header>
           <div className="card-content">
             <div className="content">
-              {state.loading ? (
+              {quizState.loading ? (
                 <AnswerListElm className="subtitle is-3">Loading. . . </AnswerListElm>
               ) : (
                 <List>{randerAnswerListElement()}</List>
@@ -141,17 +131,21 @@ export const Quiz: React.FC<Props> = ({ selectedFormOptions }) => {
           </div>
         </QuizContainer>
         <ButtonContainer>
-          <Link to="/preparingQuiz">
-            <button onClick={handleNextButton} className="button is-primary is-large is-rounded">
-              Next !
-            </button>
-          </Link>
+          <button onClick={handleNextButton} className="button is-primary is-large is-rounded">
+            Next !
+          </button>
+          <button onClick={handleNextButton} className="button is-danger is-large is-rounded">
+            Back/ Reset Quiz
+          </button>
+          <h1 className="title">
+            {quizState.activeQuestion + 1}/{initialState.numberOfQuestion}
+          </h1>
         </ButtonContainer>
       </AppContainer>
       <progress
-        className="progress is-success is-large"
-        value={state.activeQuestion + 1}
-        max={selectedFormOptions.numberOfQuestion}
+        className="progress is-info is-large"
+        value={quizState.activeQuestion + 1}
+        max={initialState.numberOfQuestion}
       ></progress>
     </>
   )
