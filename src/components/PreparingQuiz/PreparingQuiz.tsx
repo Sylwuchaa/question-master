@@ -1,8 +1,10 @@
-import React, { useState, useReducer, ChangeEvent } from 'react'
+import React, { useState, useReducer, ChangeEvent, useContext } from 'react'
 import styled from 'styled-components'
 import { SelectCategory } from './components/SelectCategory'
 import { AppContainer, ButtonContainer } from '../../styled/components/GlobalComponents'
 import { Quiz } from '../Quiz'
+import { useGlobalReducers } from '../../hooks/useQuizReducer'
+import { GlobalContext } from '../../App'
 
 const Input = styled.input`
   text-align: center;
@@ -31,32 +33,14 @@ const SelectInputContainer = styled.div`
   text-align: center;
   text-align-last: center;
 `
-export interface PrepareData {
-  numberOfQuestion: string
-  difficulty: string
-  typeOfQuiz: string
-  selectedCategory: string
-}
-
-const INITIAL_STATE = {
-  numberOfQuestion: '',
-  difficulty: '',
-  typeOfQuiz: '',
-  selectedCategory: '',
-}
-
-const inputsReducer = (state: PrepareData, { field, value }: any) => {
-  return {
-    ...state,
-    [field]: value,
-  }
-}
 
 export const PreparingQuiz: React.FC = () => {
+  const globalContext = useContext(GlobalContext)
 
-  const [inputsValue, dispatch] = useReducer(inputsReducer, INITIAL_STATE)
+  // const { quizState, initialState, quizDispatch, inputsDispatch } = useGlobalReducers()
+  
   const handleOnChangeInputs = (evt: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    dispatch({ field: evt.target.name, value: evt.target.value })
+    globalContext.inputsDispatch({ field: evt.target.name, value: evt.target.value })
   }
   const [showQuiz, setShowQuizStatus] = useState<boolean>(false)
 
@@ -74,21 +58,21 @@ export const PreparingQuiz: React.FC = () => {
           min="1"
           max="50"
           placeholder="Between 1 to 50"
-          value={inputsValue.numberOfQuestion}
+          value={globalContext.initialState.numberOfQuestion}
           onChange={handleOnChangeInputs}
           required={true}
         />
         <InputContainer>
           <SelectCategory
             handleOnChangeCategory={handleOnChangeInputs}
-            categoryValue={inputsValue.selectedCategory}
+            categoryValue={globalContext.initialState.selectedCategory}
           />
         </InputContainer>
         <InputContainer>
           <Label htmlFor="difficulty">Select Difficulty:</Label>
           <SelectInputContainer className="select is-info">
             <SelectInput
-              value={inputsValue.difficulty}
+              value={globalContext.initialState.difficulty}
               id="difficulty"
               onChange={handleOnChangeInputs}
               name="difficulty"
@@ -106,7 +90,7 @@ export const PreparingQuiz: React.FC = () => {
             <SelectInput
               id="type"
               onChange={handleOnChangeInputs}
-              value={inputsValue.typeOfQuiz}
+              value={globalContext.initialState.typeOfQuiz}
               name="typeOfQuiz"
             >
               <option>Any Type</option>
@@ -125,7 +109,7 @@ export const PreparingQuiz: React.FC = () => {
       </AppContainer>
       )}
       {showQuiz && (
-        <Quiz selectedFormOptions={inputsValue} />
+        <Quiz />
       )}
     </>
   )
