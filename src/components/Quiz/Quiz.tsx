@@ -1,8 +1,9 @@
 import React, { useEffect, useContext } from 'react'
 import styled from 'styled-components'
-import { AppContainer, ButtonContainer } from '../styled/components/GlobalComponents'
-import { GlobalContext } from '../App'
-import { Link } from 'react-router-dom'
+import { AppContainer, ButtonContainer } from '../../styled/components/GlobalComponents'
+import { GlobalContext } from '../../App'
+import { Link, Redirect } from 'react-router-dom'
+import { WrongPages } from './components/WrongPage'
 
 const QuizContainer = styled.div`
   display: flex;
@@ -69,10 +70,14 @@ export const Quiz: React.FC = () => {
       return handleNextButton()
     }
 
-    return null
+    return
   }
 
   const theShuffledArrayOfAnswers = () => {
+    if (isUncontrolledEntry()) {
+      return <Redirect to='/wrong'/>
+    }
+
     let arrayOfIncorrectAnswers = quizState.questionData[quizState.activeQuestion].incorrect_answers
     const correctAnswer = quizState.questionData[quizState.activeQuestion].correct_answer
 
@@ -100,13 +105,17 @@ export const Quiz: React.FC = () => {
     quizDispatch({ type: 'RESET_TIME_REMAINING' })
   }
 
+  const isUncontrolledEntry = () => (quizState.questionData.length === 0 ? true : false)
+
   const renderQuestionsData = () => {
+    if (isUncontrolledEntry()) {
+      return <Redirect to='/wrong'/>
+    }
+
     return (
       <h3 className="title is-3">{quizState.questionData[quizState.activeQuestion].question}</h3>
     )
   }
-
-  const handleResetQuiz = () => {}
 
   return (
     <>
@@ -144,7 +153,7 @@ export const Quiz: React.FC = () => {
             Next !
           </button>
           <Link to="/preparingQuiz">
-            <button onClick={handleResetQuiz} className="button is-danger is-large is-rounded">
+            <button className="button is-danger is-large is-rounded">
               Back/ Reset Quiz
             </button>
           </Link>
