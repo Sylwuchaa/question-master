@@ -71,9 +71,9 @@ export const Quiz: React.FC = () => {
     return null
   }
 
-  const theShuffledArrayOfAnswers = async () => {
-    let arrayOfIncorrectAnswers = await quizState.questionData[quizState.activeQuestion].incorrect_answers
-    const correctAnswer = await quizState.questionData[quizState.activeQuestion].correct_answer
+  const theShuffledArrayOfAnswers = () => {
+    let arrayOfIncorrectAnswers = quizState.questionData[quizState.activeQuestion].incorrect_answers
+    const correctAnswer = quizState.questionData[quizState.activeQuestion].correct_answer
 
     arrayOfIncorrectAnswers = [...arrayOfIncorrectAnswers, correctAnswer]
 
