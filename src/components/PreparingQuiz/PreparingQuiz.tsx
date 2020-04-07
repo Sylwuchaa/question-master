@@ -38,7 +38,7 @@ const SelectInputContainer = styled.div`
 export const PreparingQuiz: React.FC = () => {
   const globalContext = useContext(GlobalContext)
 
-  // const { quizState, initialState, quizDispatch, inputsDispatch } = useGlobalReducers()
+  const { quizState, initialState, quizDispatch, inputsDispatch } = useGlobalReducers()
 
   const handleOnChangeInputs = (evt: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     globalContext.inputsDispatch({ field: evt.target.name, value: evt.target.value })
