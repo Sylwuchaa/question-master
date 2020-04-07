@@ -100,7 +100,7 @@ const quizReducer = (state: QUIZ_STATE, action: any) => {
   }
 }
 
-export function useGlobalReducers() {
+export function useGlobalReducer() {
   const [initialState, inputsDispatch] = useReducer(inputsReducer, INITIAL_STATE)
   const [quizState, quizDispatch] = useReducer(quizReducer, QUIZ_STATE)
 

@@ -1,8 +1,7 @@
-import React, { useState, useReducer, ChangeEvent, useContext } from 'react'
+import React, { ChangeEvent, useContext } from 'react'
 import styled from 'styled-components'
 import { SelectCategory } from './components/SelectCategory'
 import { AppContainer, ButtonContainer } from '../../styled/components/GlobalComponents'
-import { useGlobalReducers } from '../../hooks/useQuizReducer'
 import { GlobalContext } from '../../App'
 import { Link } from 'react-router-dom'
 
@@ -36,8 +35,6 @@ const SelectInputContainer = styled.div`
 
 export const PreparingQuiz: React.FC = () => {
   const globalContext = useContext(GlobalContext)
-
-  const { quizState, initialState, quizDispatch, inputsDispatch } = useGlobalReducers()
 
   const handleOnChangeInputs = (evt: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     globalContext.inputsDispatch({ field: evt.target.name, value: evt.target.value })
