@@ -2,6 +2,7 @@ import React, { useEffect, useContext } from 'react'
 import styled from 'styled-components'
 import { AppContainer, ButtonContainer } from '../styled/components/GlobalComponents'
 import { GlobalContext } from '../App'
+import { Link } from 'react-router-dom'
 
 const QuizContainer = styled.div`
   display: flex;
@@ -100,8 +101,12 @@ export const Quiz: React.FC = () => {
   }
 
   const renderQuestionsData = () => {
-    return <h3 className="title is-3">{quizState.questionData[quizState.activeQuestion].question}</h3>
+    return (
+      <h3 className="title is-3">{quizState.questionData[quizState.activeQuestion].question}</h3>
+    )
   }
+
+  const handleResetQuiz = () => {}
 
   return (
     <>
@@ -117,7 +122,11 @@ export const Quiz: React.FC = () => {
         <QuizContainer className="card">
           <Header className="card-header">
             <div className="notification is-primary">
-              {quizState.loading ? <h3 className="title is-3">Loading. . .</h3> : renderQuestionsData()}
+              {quizState.loading ? (
+                <h3 className="title is-3">Loading. . .</h3>
+              ) : (
+                renderQuestionsData()
+              )}
             </div>
           </Header>
           <div className="card-content">
@@ -134,9 +143,11 @@ export const Quiz: React.FC = () => {
           <button onClick={handleNextButton} className="button is-primary is-large is-rounded">
             Next !
           </button>
-          <button onClick={handleNextButton} className="button is-danger is-large is-rounded">
-            Back/ Reset Quiz
-          </button>
+          <Link to="/preparingQuiz">
+            <button onClick={handleResetQuiz} className="button is-danger is-large is-rounded">
+              Back/ Reset Quiz
+            </button>
+          </Link>
           <h1 className="title">
             {quizState.activeQuestion + 1}/{initialState.numberOfQuestion}
           </h1>
