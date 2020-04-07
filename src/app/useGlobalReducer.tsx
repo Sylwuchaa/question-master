@@ -18,7 +18,7 @@ const QUIZ_STATE = {
   activeQuestion: 0,
   loading: true,
   error: '',
-  millisecondsRemaining: 1300,
+  millisecondsRemaining: 0,
   shuffleAnswers: [],
   questionData: [
     {
@@ -88,12 +88,12 @@ const quizReducer = (state: QUIZ_STATE, action: any) => {
     case 'START_TIME_REMAINING':
       return {
         ...state,
-        millisecondsRemaining: state.millisecondsRemaining - 1,
+        millisecondsRemaining: state.millisecondsRemaining + 1,
       }
     case 'RESET_TIME_REMAINING':
       return {
         ...state,
-        millisecondsRemaining: 1300,
+        millisecondsRemaining: state.millisecondsRemaining = 0,
       }
     default:
       return state
