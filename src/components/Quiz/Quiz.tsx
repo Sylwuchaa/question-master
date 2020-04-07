@@ -4,6 +4,7 @@ import { AppContainer, ButtonContainer } from '../../styled/components/GlobalCom
 import { GlobalContext } from '../../App'
 import { Link, Redirect } from 'react-router-dom'
 import { WrongPages } from './components/WrongPage'
+import { TimeRemainingProgressBar } from '../Quiz/components/TimeRemainingProgressBar'
 
 const QuizContainer = styled.div`
   display: flex;
@@ -43,6 +44,8 @@ const Input = styled.input`
 const Label = styled.label`
   cursor: pointer;
 `
+export type QuizConfig = '1500' | '500' & string 
+const maxTimeRemaining: QuizConfig = '500'
 
 export const Quiz: React.FC = () => {
   const globalContext = useContext(GlobalContext)
@@ -52,7 +55,7 @@ export const Quiz: React.FC = () => {
   }, [quizState.questionData, quizState.activeQuestion])
 
   useEffect(() => {
-    const timer = setTimeout(() => {
+    const timer = setInterval(() => {
       handleForStartTimeRemaining()
     }, 1)
 
@@ -62,20 +65,20 @@ export const Quiz: React.FC = () => {
   }, [quizState.millisecondsRemaining, quizState.activeQuestion])
 
   const handleForStartTimeRemaining = () => {
-    if (quizState.millisecondsRemaining > 0) {
+    if (quizState.millisecondsRemaining < 500) {
       return quizDispatch({ type: 'START_TIME_REMAINING' })
     }
 
-    if (quizState.millisecondsRemaining === 0) {
+    if (quizState.millisecondsRemaining === 500) {
       return handleNextButton()
     }
 
-    return
+    return null
   }
 
   const theShuffledArrayOfAnswers = () => {
     if (isUncontrolledEntry()) {
-      return <Redirect to='/wrong'/>
+      return <Redirect to="/wrong" />
     }
 
     let arrayOfIncorrectAnswers = quizState.questionData[quizState.activeQuestion].incorrect_answers
@@ -109,7 +112,7 @@ export const Quiz: React.FC = () => {
 
   const renderQuestionsData = () => {
     if (isUncontrolledEntry()) {
-      return <Redirect to='/wrong'/>
+      return <Redirect to="/wrong" />
     }
 
     return (
@@ -119,12 +122,12 @@ export const Quiz: React.FC = () => {
 
   return (
     <>
-      <progress
-        className="progress is-danger is-large"
-        value={quizState.millisecondsRemaining}
-        max="1300"
+      <TimeRemainingProgressBar
+        millisecondsRemaining={quizState.millisecondsRemaining}
+        max={maxTimeRemaining}
       />
       <AppContainer>
+        {quizState.millisecondsRemaining}
         <h1 className="title">
           {quizState.activeQuestion + 1}/{initialState.numberOfQuestion}
         </h1>
@@ -153,9 +156,7 @@ export const Quiz: React.FC = () => {
             Next !
           </button>
           <Link to="/preparingQuiz">
-            <button className="button is-danger is-large is-rounded">
-              Back/ Reset Quiz
-            </button>
+            <button className="button is-danger is-large is-rounded">Back/ Reset Quiz</button>
           </Link>
           <h1 className="title">
             {quizState.activeQuestion + 1}/{initialState.numberOfQuestion}
