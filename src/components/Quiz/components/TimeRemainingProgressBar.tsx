@@ -8,8 +8,6 @@ type Props = {
 export const TimeRemainingProgressBar: React.FC<Props> = ({millisecondsRemaining, max}) => {
 
     const progressBarRef = useRef<HTMLProgressElement>(null)
-    console.log(millisecondsRemaining);
-    console.log(max);
   return (
     <progress
       ref={progressBarRef}

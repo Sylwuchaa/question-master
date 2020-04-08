@@ -18,6 +18,7 @@ const QUIZ_STATE = {
   activeQuestion: 0,
   loading: true,
   error: '',
+  lastPathHistory: null,
   millisecondsRemaining: 0,
   shuffleAnswers: [],
   questionData: [
@@ -44,20 +45,39 @@ interface QUIZ_STATE {
   activeQuestion: number
   loading: boolean
   error: string
+  lastPathHistory: string | null
   millisecondsRemaining: number
   shuffleAnswers: Array<string>
   questionData: QuestionData[]
 }
 
-const inputsReducer = (state: INITIAL_STATE, { field, value }: any) => {
-  return {
-    ...state,
-    [field]: value,
-  }
+const inputsReducer = (state: INITIAL_STATE, { field, value, type }: any) => {
+  switch(type) {
+    case 'SET_INPUT_VALUE': 
+    return {
+      ...state,
+      [field]: value,
+    }
+    case 'RESET_INPUTS_VALUE': 
+    return {
+      ...state,
+      numberOfQuestion: '',
+      difficulty: '',
+      typeOfQuiz: '',
+      selectedCategory: ''
+    }
+    default:
+      return state
+  } 
 }
 
 const quizReducer = (state: QUIZ_STATE, action: any) => {
   switch (action.type) {
+    case 'FETCH_PENDING':
+      return {
+        ...state,
+        loading: true,
+      }
     case 'FETCH_SUCCESS':
       return {
         ...state,
@@ -80,6 +100,11 @@ const quizReducer = (state: QUIZ_STATE, action: any) => {
         ...state,
         activeQuestion: state.activeQuestion - 1,
       }
+      case 'RESET_ACTIVE_QUESTION':
+      return {
+        ...state,
+        activeQuestion: state.activeQuestion = 0,
+      }
     case 'NEW_ANSWERS_ARRAY':
       return {
         ...state,
@@ -95,23 +120,35 @@ const quizReducer = (state: QUIZ_STATE, action: any) => {
         ...state,
         millisecondsRemaining: state.millisecondsRemaining = 0,
       }
+    case 'PUSH_PATH_TO_HISTORY':
+      return {
+        ...state,
+        lastPathHistory: action.payload,
+      }
     default:
       return state
   }
 }
 
 export function useGlobalReducer() {
+  const abortController = new AbortController()
+  const signal = abortController.signal
   const [initialState, inputsDispatch] = useReducer(inputsReducer, INITIAL_STATE)
   const [quizState, quizDispatch] = useReducer(quizReducer, QUIZ_STATE)
 
   useEffect(() => {
     const baseURL = `https://opentdb.com/api.php?amount=${initialState.numberOfQuestion}`
     getQuestions(baseURL)
+
+    return () => {
+      abortController.abort()
+    }
   }, [initialState.numberOfQuestion])
 
   const getQuestions = async (url: string) => {
     try {
-      const response = await fetch(url)
+      quizDispatch({ type: 'FETCH_PENDING'})
+      const response = await fetch(url, {signal: signal})
       const questionsData = await response.json()
       quizDispatch({ type: 'FETCH_SUCCESS', payload: questionsData.results })
     } catch (err) {

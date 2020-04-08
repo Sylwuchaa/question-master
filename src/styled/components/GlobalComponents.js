@@ -20,7 +20,6 @@ export const AppContainer = styled.div`
 export const ButtonContainer = styled.div`
   display: flex;
   height: 30%;
-  width: 60%;
   flex-direction: column;
   justify-content: space-evenly;
   align-items: center;

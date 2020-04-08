@@ -2,8 +2,7 @@ import React, { useEffect, useContext } from 'react'
 import styled from 'styled-components'
 import { AppContainer, ButtonContainer } from '../../styled/components/GlobalComponents'
 import { GlobalContext } from '../../App'
-import { Link, Redirect } from 'react-router-dom'
-import { WrongPages } from './components/WrongPage'
+import { Link, Redirect, useHistory } from 'react-router-dom'
 import { TimeRemainingProgressBar } from '../Quiz/components/TimeRemainingProgressBar'
 
 const QuizContainer = styled.div`
@@ -44,12 +43,14 @@ const Input = styled.input`
 const Label = styled.label`
   cursor: pointer;
 `
-export type QuizConfig = '1500' | '500' & string 
+export type QuizConfig = '1500' | ('500' & string)
 const maxTimeRemaining: QuizConfig = '500'
 
 export const Quiz: React.FC = () => {
   const globalContext = useContext(GlobalContext)
   const { quizState, quizDispatch, initialState } = globalContext
+  const history = useHistory()
+  
   useEffect(() => {
     theShuffledArrayOfAnswers()
   }, [quizState.questionData, quizState.activeQuestion])
@@ -111,13 +112,19 @@ export const Quiz: React.FC = () => {
   const isUncontrolledEntry = () => (quizState.questionData.length === 0 ? true : false)
 
   const renderQuestionsData = () => {
-    if (isUncontrolledEntry()) {
-      return <Redirect to="/wrong" />
-    }
+    // if (isUncontrolledEntry()) {
+    //   return <Redirect to="/wrong" />
+    // }
 
     return (
       <h3 className="title is-3">{quizState.questionData[quizState.activeQuestion].question}</h3>
     )
+  }
+
+  const handleResetButton = () => {
+    quizDispatch({ type: 'RESET_TIME_REMAINING' })
+    quizDispatch({ type: 'RESET_ACTIVE_QUESTION' })
+    quizDispatch({ type: 'PUSH_PATH_TO_HISTORY', payload: history.location.pathname })
   }
 
   return (
@@ -137,7 +144,7 @@ export const Quiz: React.FC = () => {
               {quizState.loading ? (
                 <h3 className="title is-3">Loading. . .</h3>
               ) : (
-                renderQuestionsData()
+                <h3 className="title is-3">{quizState.questionData[quizState.activeQuestion].question}</h3>
               )}
             </div>
           </Header>
@@ -156,7 +163,9 @@ export const Quiz: React.FC = () => {
             Next !
           </button>
           <Link to="/preparingQuiz">
-            <button className="button is-danger is-large is-rounded">Back/ Reset Quiz</button>
+            <button onClick={handleResetButton} className="button is-danger is-large is-rounded">
+              Back/ Reset Quiz
+            </button>
           </Link>
           <h1 className="title">
             {quizState.activeQuestion + 1}/{initialState.numberOfQuestion}

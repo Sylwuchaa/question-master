@@ -1,13 +1,12 @@
-import React, { ChangeEvent, useContext } from 'react'
+import React, { ChangeEvent, useContext, useRef } from 'react'
 import styled from 'styled-components'
 import { SelectCategory } from './components/SelectCategory'
 import { AppContainer, ButtonContainer } from '../../styled/components/GlobalComponents'
 import { GlobalContext } from '../../App'
-import { Link } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 
 const Input = styled.input`
   text-align: center;
-  width: 30%;
 `
 const Label = styled.label`
   padding: 5px;
@@ -20,7 +19,6 @@ const InputContainer = styled.div`
   justify-content: center;
   align-items: center;
   padding: 15px 0 15px;
-  width: 30%;
 `
 const SelectInput = styled.select`
   width: 100%;
@@ -35,16 +33,38 @@ const SelectInputContainer = styled.div`
 
 export const PreparingQuiz: React.FC = () => {
   const globalContext = useContext(GlobalContext)
+  const { quizDispatch, initialState, inputsDispatch } = globalContext
+  const numberOfQuestionInput = useRef<HTMLInputElement>(null)
+  const history = useHistory()
+
 
   const handleOnChangeInputs = (evt: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    globalContext.inputsDispatch({ field: evt.target.name, value: evt.target.value })
+    inputsDispatch({ field: evt.target.name, value: evt.target.value, type: 'SET_INPUT_VALUE' })
+  }
+
+  const handleResetFormInputsValue = () => {
+    inputsDispatch({ type: 'RESET_INPUTS_VALUE' })
+  }
+
+  const handleValidate = () => {
+    if (Number(initialState.numberOfQuestion) > 0 && Number(initialState.numberOfQuestion) < 52) {
+      return (
+        history.push('/quiz'),
+        quizDispatch({ type: 'PUSH_PATH_TO_HISTORY', payload: history.location.pathname })
+      )
+    }
+
+    return handleResetFormInputsValue()
   }
 
   return (
     <AppContainer>
       <h1 className="title">Prepare Your Quiz !</h1>
+      
       <Label htmlFor="questionNumber">Select number of question/s:</Label>
+      <form>
       <Input
+        ref={numberOfQuestionInput}
         name="numberOfQuestion"
         className="input is-info"
         id="questionNumber"
@@ -52,21 +72,21 @@ export const PreparingQuiz: React.FC = () => {
         min="1"
         max="50"
         placeholder="Between 1 to 50"
-        value={globalContext.initialState.numberOfQuestion}
+        value={initialState.numberOfQuestion}
         onChange={handleOnChangeInputs}
         required={true}
       />
       <InputContainer>
         <SelectCategory
           handleOnChangeCategory={handleOnChangeInputs}
-          categoryValue={globalContext.initialState.selectedCategory}
+          categoryValue={initialState.selectedCategory}
         />
       </InputContainer>
       <InputContainer>
         <Label htmlFor="difficulty">Select Difficulty:</Label>
         <SelectInputContainer className="select is-info">
           <SelectInput
-            value={globalContext.initialState.difficulty}
+            value={initialState.difficulty}
             id="difficulty"
             onChange={handleOnChangeInputs}
             name="difficulty"
@@ -84,7 +104,7 @@ export const PreparingQuiz: React.FC = () => {
           <SelectInput
             id="type"
             onChange={handleOnChangeInputs}
-            value={globalContext.initialState.typeOfQuiz}
+            value={initialState.typeOfQuiz}
             name="typeOfQuiz"
           >
             <option>Any Type</option>
@@ -93,11 +113,19 @@ export const PreparingQuiz: React.FC = () => {
           </SelectInput>
         </SelectInputContainer>
       </InputContainer>
+
       <ButtonContainer>
-        <Link to="/quiz" className="button is-primary is-large is-rounded">
+        <button onClick={handleValidate} className="button is-primary is-large is-rounded">
           Let's Start !
-        </Link>
+        </button>
+        <button
+          onClick={handleResetFormInputsValue}
+          className="button is-danger is-large is-rounded"
+        >
+          Reset Inputs
+        </button>
       </ButtonContainer>
+      </form>
     </AppContainer>
   )
 }
