@@ -14,7 +14,7 @@ type DataObject = {
 
 type Data = DataObject[]
 
-interface SelectCategory {
+type SelectCategory = {
   handleOnChangeCategory: (event: ChangeEvent<HTMLSelectElement>) => void
   categoryValue: string
 }
@@ -23,19 +23,23 @@ export const SelectCategory: React.FC<SelectCategory> = ({
   handleOnChangeCategory,
   categoryValue,
 }) => {
+  const abortController = new AbortController()
+  const signal = abortController.signal
   const [categories, getCategoriesType] = useState<Data>()
   const [loading, setStatus] = useState<boolean>(true)
   useEffect(() => {
     getCategory()
+
+    return () => abortController.abort()
   }, [])
 
   const getCategory = async () => {
     try {
-      const response = await fetch(baseURL)
+      const response = await fetch(baseURL, { signal: signal })
       const categoryData = await response.json()
       getCategoriesType(categoryData.trivia_categories)
 
-      return getCategoriesType(categoryData.trivia_categories), setStatus(false)
+      return setStatus(false), getCategoriesType(categoryData.trivia_categories)
     } catch (err) {
       console.log(err)
     }
