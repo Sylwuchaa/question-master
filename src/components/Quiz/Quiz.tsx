@@ -52,7 +52,11 @@ export const Quiz: React.FC = () => {
   const history = useHistory()
 
   useEffect(() => {
-    theShuffledArrayOfAnswers()
+    if (quizState.lastPathHistory === null) {
+      history.push('/wrong')
+    } else {
+      theShuffledArrayOfAnswers()
+    }
   }, [quizState.questionData, quizState.activeQuestion])
 
   useEffect(() => {
@@ -78,10 +82,6 @@ export const Quiz: React.FC = () => {
   }
 
   const theShuffledArrayOfAnswers = () => {
-    if (isUncontrolledEntry()) {
-      return <Redirect to="/wrong" />
-    }
-
     let arrayOfIncorrectAnswers = quizState.questionData[quizState.activeQuestion].incorrect_answers
     const correctAnswer = quizState.questionData[quizState.activeQuestion].correct_answer
 
@@ -109,21 +109,11 @@ export const Quiz: React.FC = () => {
       quizDispatch({ type: 'INCREMENT_ACTIVE_QUESTION' })
       quizDispatch({ type: 'RESET_TIME_REMAINING' })
     } else {
-      quizDispatch({type: 'FINISHED_QUIZ'})
+      quizDispatch({ type: 'FINISHED_QUIZ' })
     }
   }
 
-  const isUncontrolledEntry = () => (quizState.questionData.length === 0 ? true : false)
-
-  const renderQuestionsData = () => {
-    // if (isUncontrolledEntry()) {
-    //   return <Redirect to="/wrong" />
-    // }
-
-    return (
-      <h3 className="title is-3">{quizState.questionData[quizState.activeQuestion].question}</h3>
-    )
-  }
+  const isUncontrolledEntry = () => (quizState.questionData.length === 1 ? true : false)
 
   const handleResetButton = () => {
     quizDispatch({ type: 'RESET_TIME_REMAINING' })
@@ -131,7 +121,6 @@ export const Quiz: React.FC = () => {
     quizDispatch({ type: 'PUSH_PATH_TO_HISTORY', payload: history.location.pathname })
     quizDispatch({ type: 'RESET_QUIZ_STATE' })
     inputsDispatch({ type: 'RESET_INPUTS_VALUE' })
-
   }
 
   return (
