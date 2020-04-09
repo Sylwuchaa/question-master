@@ -17,6 +17,7 @@ const INITIAL_STATE = {
 const QUIZ_STATE = {
   activeQuestion: 0,
   loading: true,
+  finished: false,
   error: '',
   lastPathHistory: null,
   millisecondsRemaining: 0,
@@ -44,6 +45,7 @@ interface QuestionData {
 interface QUIZ_STATE {
   activeQuestion: number
   loading: boolean
+  finished: boolean,
   error: string
   lastPathHistory: string | null
   millisecondsRemaining: number
@@ -124,6 +126,16 @@ const quizReducer = (state: QUIZ_STATE, action: any) => {
       return {
         ...state,
         lastPathHistory: action.payload,
+      }
+    case 'FINISHED_QUIZ':
+      return {
+        ...state,
+        finished: true,
+      } 
+    case 'RESET_QUIZ_STATE':
+      return {
+        ...state, 
+        state: QUIZ_STATE,
       }
     default:
       return state
