@@ -1,6 +1,6 @@
 import React, { useEffect, useContext } from 'react'
 import styled from 'styled-components'
-import { AppContainer, ButtonContainer } from '../../styled/components/GlobalComponents'
+import { AppContainer, ButtonContainer, PrepareContainer } from '../../styled/components/GlobalComponents'
 import { GlobalContext } from '../../App'
 import { Link, Redirect, useHistory } from 'react-router-dom'
 import { TimeRemainingProgressBar } from '../Quiz/components/TimeRemainingProgressBar'
@@ -129,7 +129,7 @@ export const Quiz: React.FC = () => {
         millisecondsRemaining={quizState.millisecondsRemaining}
         max={maxTimeRemaining}
       />
-      <AppContainer>
+      <PrepareContainer>
         {quizState.millisecondsRemaining}
         <h1 className="title">
           {quizState.activeQuestion + 1} / {initialState.numberOfQuestion}
@@ -169,7 +169,7 @@ export const Quiz: React.FC = () => {
             {quizState.activeQuestion + 1} / {initialState.numberOfQuestion}
           </h1>
         </ButtonContainer>
-      </AppContainer>
+      </PrepareContainer>
       <progress
         className="progress is-info is-large"
         value={quizState.activeQuestion + 1}
