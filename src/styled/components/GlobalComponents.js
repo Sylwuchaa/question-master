@@ -4,9 +4,11 @@ export const TitleContainer = styled.div`
   height: 100vh;
   width: 100vw;
   display: flex;
+  flex-direction: row;
   justify-content: center;
   align-items: center;
   flex-direction: row;
+  background-color: #D6BCFA;
 `
 export const AppContainer = styled.div`
   display: flex;
