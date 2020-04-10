@@ -12,12 +12,23 @@ export const TitleContainer = styled.div`
 `
 export const AppContainer = styled.div`
   display: flex;
+  flex-direction: row;
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #D6BCFA;
+`
+export const PrepareContainer = styled.div`
+  display: flex;
   flex-direction: column;
   height: 94.27vh;
   width: 100vw;
   display: flex;
   justify-content: center;
   align-items: center;
+  background-color: #D6BCFA;
 `
 export const ButtonContainer = styled.div`
   display: flex;
