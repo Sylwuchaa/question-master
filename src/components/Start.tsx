@@ -40,17 +40,19 @@ export const Start: React.FC = () => {
       const haze = elements.querySelector('#haze')
       const questionMark = elements.querySelector('#questionMark')
 
-      gsap.set([, person, torch, haze, questionMark], { autoAlpha: 0 })
+      gsap.set([, person, torch, ...haze?.children, questionMark], { autoAlpha: 0 })
       gsap.set(torch, { transformOrigin: '50% 100%' })
       gsap.set(haze, { transformOrigin: '10% 20%' })
 
       const timeLine = gsap.timeline({ defaults: { ease: 'power3.inOut' } })
 
-      timeLine
-        .fromTo(person, { x: '+=400' }, { x: '-=400', autoAlpha: 1 })
-        .fromTo(torch, { scaleY: 0 }, { duration: 0.6, autoAlpha: 1, scale: 1 })
-        .fromTo(haze, { scale: 0.6 }, { duration: 0.3, scale: 1, autoAlpha: 1 })
-        .to(questionMark, { duration: 3, autoAlpha: 1 })
+      if (haze != null) {
+        timeLine
+          .fromTo(person, { x: '+=400' }, { x: '-=400', autoAlpha: 1 })
+          .fromTo(torch, { scaleY: 0 }, { duration: 0.6, autoAlpha: 1, scale: 1 })
+          .fromTo(haze.children, { scale: 0.3 }, { duration: .5, scale: 1, autoAlpha: 1, stagger: 0.1 })
+          .to(questionMark, { duration: 0.4, autoAlpha: 1 })
+      }
     }
   }, [])
 
