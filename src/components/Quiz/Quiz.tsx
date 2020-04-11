@@ -212,12 +212,7 @@ export const Quiz: React.FC = () => {
             {quizState.activeQuestion + 1} / {initialState.numberOfQuestion}
           </h1>
         </ButtonContainer>
-<<<<<<< HEAD
-      </AppContainer>
-
-=======
       </PrepareContainer>
->>>>>>> master
       <progress
         className="progress is-info is-large"
         value={quizState.activeQuestion + 1}
