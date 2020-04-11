@@ -33,6 +33,15 @@ const QUIZ_STATE = {
     },
   ],
 }
+
+const ANSWERS_STATE = {
+  answers: [
+    {
+      value: '',
+      checked: false,
+    }
+  ]
+}
 interface QuestionData {
   category: string
   type: string
@@ -51,6 +60,31 @@ interface QUIZ_STATE {
   millisecondsRemaining: number
   shuffleAnswers: Array<string>
   questionData: QuestionData[]
+}
+
+interface Answer { 
+  value: string,
+  checked: boolean,
+}
+
+interface ANSWERS_STATE { 
+  answers: Answer[]
+}
+
+const answerReducer = (state: ANSWERS_STATE, { answer, checked, type }: any) => {
+  switch(type) {
+    case 'SET_ANSWER':
+      // const answer = state.answers.push({
+      //   value: action.payload.value,
+      //   checked: action.payload.checked
+      // })
+    return {
+      ...state,
+      [answer]: checked
+    }
+    default:
+      return state
+  }
 }
 
 const inputsReducer = (state: INITIAL_STATE, { field, value, type }: any) => {
@@ -147,6 +181,7 @@ export function useGlobalReducer() {
   const signal = abortController.signal
   const [initialState, inputsDispatch] = useReducer(inputsReducer, INITIAL_STATE)
   const [quizState, quizDispatch] = useReducer(quizReducer, QUIZ_STATE)
+  const [answerState, answerDispatch] = useReducer(answerReducer, ANSWERS_STATE)
 
   useEffect(() => {
     const baseURL = `https://opentdb.com/api.php?amount=${initialState.numberOfQuestion}`
@@ -168,5 +203,5 @@ export function useGlobalReducer() {
     }
   }
 
-  return { quizState, initialState, quizDispatch, inputsDispatch }
+  return { quizState, initialState, quizDispatch, inputsDispatch, answerState, answerDispatch }
 }

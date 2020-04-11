@@ -1,8 +1,8 @@
-import React, { useEffect, useContext } from 'react'
+import React, { useEffect, useContext, useRef, ChangeEvent, FormEvent, FormHTMLAttributes } from 'react'
 import styled from 'styled-components'
 import { AppContainer, ButtonContainer, PrepareContainer } from '../../styled/components/GlobalComponents'
 import { GlobalContext } from '../../App'
-import { Link, Redirect, useHistory } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 import { TimeRemainingProgressBar } from '../Quiz/components/TimeRemainingProgressBar'
 
 const QuizContainer = styled.div`
@@ -48,8 +48,17 @@ const maxTimeRemaining: QuizConfig = '500'
 
 export const Quiz: React.FC = () => {
   const globalContext = useContext(GlobalContext)
-  const { quizState, quizDispatch, initialState, inputsDispatch } = globalContext
+  const {
+    quizState,
+    quizDispatch,
+    initialState,
+    inputsDispatch,
+    answerState,
+    answerDispatch,
+  } = globalContext
   const history = useHistory()
+  const checkbox = useRef(null)
+  const answerForm = React.useRef<HTMLFormElement | null>(null)
 
   useEffect(() => {
     if (quizState.lastPathHistory === null) {
@@ -70,16 +79,39 @@ export const Quiz: React.FC = () => {
   }, [quizState.millisecondsRemaining, quizState.activeQuestion])
 
   const handleForStartTimeRemaining = () => {
-    if (quizState.millisecondsRemaining < 500) {
+    if (quizState.millisecondsRemaining < 5000) {
       return quizDispatch({ type: 'START_TIME_REMAINING' })
     }
 
-    if (quizState.millisecondsRemaining === 500) {
+    if (quizState.millisecondsRemaining === 5000) {
       return handleNextButton()
     }
 
     return null
   }
+
+  const handleToggleChecked = () => {}
+
+  // const handleOnChangeInputs = (evt: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  //   inputsDispatch({ field: evt.target.name, value: evt.target.value, type: 'SET_INPUT_VALUE' })
+  // }
+
+  // const saveUsersAnswers = () => {
+  //   console.log()
+  //   // evt.preventDefault()
+  //   console.log(answerForm)
+  //   if ( null !== answerForm.current) {
+  //   const arrayOfElem = [ ...current.elements]
+  //   }
+    // const checkedAnswers = arrayOfElem.filter((elem) => elem.checked)
+    // console.log(arrayOfElem)
+    // answerDispatch({
+    //   answer: null,
+    //   checked: null,
+    //   type: 'SET_ANSWER',
+      
+    // })
+  // }
 
   const theShuffledArrayOfAnswers = () => {
     let arrayOfIncorrectAnswers = quizState.questionData[quizState.activeQuestion].incorrect_answers
@@ -97,7 +129,13 @@ export const Quiz: React.FC = () => {
     return quizState.shuffleAnswers.map((answer: string, index: number) => (
       <div key={answer + index} className="notification is-warning is-loading">
         <AnswerListElm className="subtitle is-3">
-          <Input id={`elem${index}`} className="is-primary" type="checkbox" />
+          <Input
+            id={`elem${index}`}
+            className="is-primary"
+            ref={checkbox}
+            value={answer}
+            type="checkbox"
+          />
           <Label htmlFor={`elem${index}`}> {answer}</Label>
         </AnswerListElm>
       </div>
@@ -106,14 +144,13 @@ export const Quiz: React.FC = () => {
 
   const handleNextButton = () => {
     if (quizState.questionData[quizState.activeQuestion + 1]) {
+      // saveUsersAnswers()
       quizDispatch({ type: 'INCREMENT_ACTIVE_QUESTION' })
       quizDispatch({ type: 'RESET_TIME_REMAINING' })
     } else {
       quizDispatch({ type: 'FINISHED_QUIZ' })
     }
   }
-
-  const isUncontrolledEntry = () => (quizState.questionData.length === 1 ? true : false)
 
   const handleResetButton = () => {
     quizDispatch({ type: 'RESET_TIME_REMAINING' })
@@ -151,13 +188,19 @@ export const Quiz: React.FC = () => {
               {quizState.loading ? (
                 <AnswerListElm className="subtitle is-3">Loading. . . </AnswerListElm>
               ) : (
-                <List>{randerAnswerListElement()}</List>
+                <form ref={answerForm}>
+                  <List>{randerAnswerListElement()}</List>
+                </form>
               )}
             </div>
           </div>
         </QuizContainer>
         <ButtonContainer>
-          <button onClick={handleNextButton} className="button is-primary is-large is-rounded">
+          <button
+            type="submit"
+            onClick={handleNextButton}
+            className="button is-primary is-large is-rounded"
+          >
             {quizState.questionData.length === quizState.activeQuestion + 1 ? 'Finish !' : 'Next !'}
           </button>
           <Link to="/preparingQuiz">
