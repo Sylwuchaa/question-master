@@ -73,12 +73,8 @@ export const Quiz: React.FC = () => {
   useEffect(() => {
     if (quizState.lastPathHistory === null) {
       history.push('/wrong')
-    } else if (quizState.questionData[quizState.activeQuestion].incorrect_answers) {
+    } else if (quizState.questionData[quizState.activeQuestion].incorrect_answers)
       theShuffledArrayOfAnswers()
-    } else if (quizState.finished) {
-      history.push('/summary')
-      quizDispatch({ type: 'PUSH_PATH_TO_HISTORY', payload: history.location.pathname })
-    }
   }, [quizState.questionData, quizState.activeQuestion, quizState.finished])
 
   useEffect(() => {
@@ -154,12 +150,11 @@ export const Quiz: React.FC = () => {
         quizDispatch({ type: 'RESET_TIME_REMAINING' })
       )
     }
-    if (quizState.finished) {
 
-      return history.push('/summary')
-    }
-
-    return quizDispatch({ type: 'FINISHED_QUIZ' })
+    return (
+      quizDispatch({ type: 'PUSH_PATH_TO_HISTORY', payload: history.location.pathname }),
+      history.push('/summary')
+    )
   }
 
   const handleResetButton = () => {
