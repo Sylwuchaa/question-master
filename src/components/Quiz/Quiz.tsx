@@ -1,6 +1,17 @@
-import React, { useEffect, useContext, useRef, ChangeEvent, FormEvent, FormHTMLAttributes } from 'react'
+import React, {
+  useEffect,
+  useContext,
+  useRef,
+  ChangeEvent,
+  FormEvent,
+  FormHTMLAttributes,
+} from 'react'
 import styled from 'styled-components'
-import { AppContainer, ButtonContainer, PrepareContainer } from '../../styled/components/GlobalComponents'
+import {
+  AppContainer,
+  ButtonContainer,
+  PrepareContainer,
+} from '../../styled/components/GlobalComponents'
 import { GlobalContext } from '../../App'
 import { Link, useHistory } from 'react-router-dom'
 import { TimeRemainingProgressBar } from '../Quiz/components/TimeRemainingProgressBar'
@@ -58,15 +69,17 @@ export const Quiz: React.FC = () => {
   } = globalContext
   const history = useHistory()
   const checkbox = useRef(null)
-  const answerForm = React.useRef<HTMLFormElement | null>(null)
 
   useEffect(() => {
     if (quizState.lastPathHistory === null) {
       history.push('/wrong')
-    } else {
+    } else if (quizState.questionData[quizState.activeQuestion].incorrect_answers) {
       theShuffledArrayOfAnswers()
+    } else if (quizState.finished) {
+      history.push('/summary')
+      quizDispatch({ type: 'PUSH_PATH_TO_HISTORY', payload: history.location.pathname })
     }
-  }, [quizState.questionData, quizState.activeQuestion])
+  }, [quizState.questionData, quizState.activeQuestion, quizState.finished])
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -90,28 +103,18 @@ export const Quiz: React.FC = () => {
     return null
   }
 
-  const handleToggleChecked = () => {}
+  const handleChange = (evt: ChangeEvent<HTMLInputElement>) => {
+    answerDispatch({ answer: evt.target.value, value: evt.target.checked, type: 'SET_ANSWER' })
+  }
 
-  // const handleOnChangeInputs = (evt: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-  //   inputsDispatch({ field: evt.target.name, value: evt.target.value, type: 'SET_INPUT_VALUE' })
-  // }
+  const calculatePoint = () => {
+    const correctAnswer = quizState.questionData[quizState.activeQuestion].correct_answer
+    if (answerState.answers[0] === correctAnswer && answerState.answers[1] === true) {
+      return quizDispatch({ type: 'INCREMENT_SCORE' })
+    }
 
-  // const saveUsersAnswers = () => {
-  //   console.log()
-  //   // evt.preventDefault()
-  //   console.log(answerForm)
-  //   if ( null !== answerForm.current) {
-  //   const arrayOfElem = [ ...current.elements]
-  //   }
-    // const checkedAnswers = arrayOfElem.filter((elem) => elem.checked)
-    // console.log(arrayOfElem)
-    // answerDispatch({
-    //   answer: null,
-    //   checked: null,
-    //   type: 'SET_ANSWER',
-      
-    // })
-  // }
+    return quizDispatch({ type: 'DECREMENT_SCORE' })
+  }
 
   const theShuffledArrayOfAnswers = () => {
     let arrayOfIncorrectAnswers = quizState.questionData[quizState.activeQuestion].incorrect_answers
@@ -134,6 +137,7 @@ export const Quiz: React.FC = () => {
             className="is-primary"
             ref={checkbox}
             value={answer}
+            onChange={handleChange}
             type="checkbox"
           />
           <Label htmlFor={`elem${index}`}> {answer}</Label>
@@ -144,12 +148,18 @@ export const Quiz: React.FC = () => {
 
   const handleNextButton = () => {
     if (quizState.questionData[quizState.activeQuestion + 1]) {
-      // saveUsersAnswers()
-      quizDispatch({ type: 'INCREMENT_ACTIVE_QUESTION' })
-      quizDispatch({ type: 'RESET_TIME_REMAINING' })
-    } else {
-      quizDispatch({ type: 'FINISHED_QUIZ' })
+      return (
+        calculatePoint(),
+        quizDispatch({ type: 'INCREMENT_ACTIVE_QUESTION' }),
+        quizDispatch({ type: 'RESET_TIME_REMAINING' })
+      )
     }
+    if (quizState.finished) {
+
+      return history.push('/summary')
+    }
+
+    return quizDispatch({ type: 'FINISHED_QUIZ' })
   }
 
   const handleResetButton = () => {
@@ -188,9 +198,7 @@ export const Quiz: React.FC = () => {
               {quizState.loading ? (
                 <AnswerListElm className="subtitle is-3">Loading. . . </AnswerListElm>
               ) : (
-                <form ref={answerForm}>
-                  <List>{randerAnswerListElement()}</List>
-                </form>
+                <List>{randerAnswerListElement()}</List>
               )}
             </div>
           </div>
