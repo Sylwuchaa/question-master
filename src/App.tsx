@@ -5,6 +5,7 @@ import { PreparingQuiz } from './components/PreparingQuiz/PreparingQuiz'
 import { Quiz } from './components/Quiz/Quiz'
 import { useGlobalReducer } from './app/useGlobalReducer'
 import { WrongPages } from './components/Quiz/components/WrongPage'
+import { Summary } from './components/Summary/Summary'
 
 export const GlobalContext = React.createContext<any>({})
 
@@ -18,6 +19,7 @@ function App() {
           <Route path="/preparingQuiz" component={PreparingQuiz} />
           <Route path="/quiz" component={Quiz} />
           <Route path="/wrong" component={WrongPages} />
+          <Route path="/summary" component={Summary} />
         </GlobalContext.Provider>
       </Switch>
     </Router>

@@ -5,6 +5,7 @@ export interface INITIAL_STATE {
   difficulty: string
   typeOfQuiz: string
   selectedCategory: string
+  answers: Array<Answer>
 }
 
 const INITIAL_STATE = {
@@ -12,6 +13,7 @@ const INITIAL_STATE = {
   difficulty: '',
   typeOfQuiz: '',
   selectedCategory: '',
+  answers: [],
 }
 
 const QUIZ_STATE = {
@@ -19,6 +21,12 @@ const QUIZ_STATE = {
   loading: true,
   finished: false,
   error: '',
+  score: 0,
+  answers: [
+    {
+      answer: null
+    }
+  ],
   lastPathHistory: null,
   millisecondsRemaining: 0,
   shuffleAnswers: [],
@@ -34,14 +42,6 @@ const QUIZ_STATE = {
   ],
 }
 
-const ANSWERS_STATE = {
-  answers: [
-    {
-      value: '',
-      checked: false,
-    }
-  ]
-}
 interface QuestionData {
   category: string
   type: string
@@ -54,7 +54,9 @@ interface QuestionData {
 interface QUIZ_STATE {
   activeQuestion: number
   loading: boolean
-  finished: boolean,
+  finished: boolean
+  score: number
+  answers: Answer[]
   error: string
   lastPathHistory: string | null
   millisecondsRemaining: number
@@ -62,49 +64,52 @@ interface QUIZ_STATE {
   questionData: QuestionData[]
 }
 
-interface Answer { 
-  value: string,
-  checked: boolean,
+interface Answer {
+  answer: boolean | null
 }
 
-interface ANSWERS_STATE { 
-  answers: Answer[]
+const ANSWERS_STATE: ANSWERS_STATE = {
+  answers: []
 }
 
-const answerReducer = (state: ANSWERS_STATE, { answer, checked, type }: any) => {
-  switch(type) {
+type ANSWERS_STATE = {
+  answers: Array<string | boolean>
+}
+const answerReducer = (state: ANSWERS_STATE, { answer, value, type }: any) => {
+  switch (type) {
     case 'SET_ANSWER':
-      // const answer = state.answers.push({
-      //   value: action.payload.value,
-      //   checked: action.payload.checked
-      // })
-    return {
-      ...state,
-      [answer]: checked
-    }
+      return {
+        ...state,
+        state: ANSWERS_STATE.answers.unshift(answer, value),
+      }
+    case 'RESET_ANSWER':
+      return {
+        ...state,
+        state: ANSWERS_STATE.answers = []
+      }
     default:
       return state
   }
 }
 
 const inputsReducer = (state: INITIAL_STATE, { field, value, type }: any) => {
-  switch(type) {
-    case 'SET_INPUT_VALUE': 
-    return {
-      ...state,
-      [field]: value,
-    }
-    case 'RESET_INPUTS_VALUE': 
-    return {
-      ...state,
-      numberOfQuestion: '',
-      difficulty: '',
-      typeOfQuiz: '',
-      selectedCategory: ''
-    }
+  switch (type) {
+    case 'SET_INPUT_VALUE':
+      return {
+        ...state,
+        [field]: value,
+      }
+    case 'RESET_INPUTS_VALUE':
+      return {
+        ...state,
+        numberOfQuestion: '',
+        difficulty: '',
+        typeOfQuiz: '',
+        selectedCategory: '',
+      }
     default:
       return state
-  } 
+  }
 }
 
 const quizReducer = (state: QUIZ_STATE, action: any) => {
@@ -131,12 +136,27 @@ const quizReducer = (state: QUIZ_STATE, action: any) => {
         ...state,
         activeQuestion: state.activeQuestion + 1,
       }
+    case 'INCREMENT_SCORE':
+      return {
+        ...state,
+        score: state.score + 1,
+      }
+    case 'DECREMENT_SCORE':
+      return {
+        ...state,
+        score: state.score - 1,
+      }
+      case 'SET_ANSWER':
+      return {
+        ...state,
+        state: ANSWERS_STATE.answers.unshift(action.payload),
+      }
     case 'DECREMENT_ACTIVE_QUESTION':
       return {
         ...state,
         activeQuestion: state.activeQuestion - 1,
       }
-      case 'RESET_ACTIVE_QUESTION':
+    case 'RESET_ACTIVE_QUESTION':
       return {
         ...state,
         activeQuestion: state.activeQuestion = 0,
@@ -165,10 +185,10 @@ const quizReducer = (state: QUIZ_STATE, action: any) => {
       return {
         ...state,
         finished: true,
-      } 
+      }
     case 'RESET_QUIZ_STATE':
       return {
-        ...state, 
+        ...state,
         state: QUIZ_STATE,
       }
     default:
@@ -194,8 +214,8 @@ export function useGlobalReducer() {
 
   const getQuestions = async (url: string) => {
     try {
-      quizDispatch({ type: 'FETCH_PENDING'})
-      const response = await fetch(url, {signal: signal})
+      quizDispatch({ type: 'FETCH_PENDING' })
+      const response = await fetch(url, { signal: signal })
       const questionsData = await response.json()
       quizDispatch({ type: 'FETCH_SUCCESS', payload: questionsData.results })
     } catch (err) {
