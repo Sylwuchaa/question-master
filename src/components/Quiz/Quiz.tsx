@@ -45,10 +45,10 @@ const Header = styled.header`
   height: 50%;
 `
 const Input = styled.input`
-  width: 25px;
-  height: 25px;
-  background-color: #2196f3;
-  background: none;
+  width: 30px;
+  height: 30px;
+  background: #ffffff;
+  border-radius: 10px;
   cursor: pointer;
 `
 const Label = styled.label`
