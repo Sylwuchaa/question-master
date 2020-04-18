@@ -11,7 +11,6 @@ export const SummaryContainer = styled.div`
   flex-direction: column;
   align-items: center;
 `
-
 export const SummaryElement = styled.div`
   display: flex;
   height: 15%;
@@ -56,7 +55,7 @@ export const Summary: React.FC = () => {
           <SectionSummaryElement className="hero is-info">
             <div className="hero-body">
               <div className="container">
-                <Title className="title">Your's Score</Title>
+                <Title className="title">Your's Score:</Title>
                 <Subtitle className="subtitle">{quizState.score}</Subtitle>
               </div>
             </div>
@@ -66,7 +65,7 @@ export const Summary: React.FC = () => {
           <SectionSummaryElement className="hero is-success">
             <div className="hero-body">
               <div className="container">
-                <Title className="title">Correct Answers</Title>
+                <Title className="title">Correct Answers:</Title>
                 <Subtitle className="subtitle">Primary subtitle</Subtitle>
               </div>
             </div>
@@ -76,7 +75,7 @@ export const Summary: React.FC = () => {
           <SectionSummaryElement className="hero is-danger">
             <div className="hero-body">
               <div className="container">
-                <Title className="title">Incorrect Answers</Title>
+                <Title className="title">Incorrect Answers:</Title>
                 <Subtitle className="subtitle">Primary subtitle</Subtitle>
               </div>
             </div>
@@ -86,7 +85,7 @@ export const Summary: React.FC = () => {
           <SectionSummaryElement className="hero is-warning">
             <div className="hero-body">
               <div className="container">
-                <Title className="title">Number of questions</Title>
+                <Title className="title">Number of questions:</Title>
                 <Subtitle className="subtitle">{initialState.numberOfQuestion}</Subtitle>
               </div>
             </div>

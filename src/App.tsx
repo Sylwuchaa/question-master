@@ -3,7 +3,7 @@ import { Start } from './components/Start'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import { PreparingQuiz } from './components/PreparingQuiz/PreparingQuiz'
 import { Quiz } from './components/Quiz/Quiz'
-import { useGlobalReducer } from './app/useGlobalReducer'
+import { useGlobalReducer } from './reducer/useGlobalReducer'
 import { WrongPages } from './components/Quiz/components/WrongPage'
 import { Summary } from './components/Summary/Summary'
 

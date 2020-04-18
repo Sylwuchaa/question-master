@@ -1,4 +1,5 @@
 import { useReducer, useEffect } from 'react'
+import { urlGeneratorHelper } from '../common/urlGeneratorHelper'
 
 export interface INITIAL_STATE {
   numberOfQuestion: string
@@ -204,15 +205,14 @@ export function useGlobalReducer() {
   const [answerState, answerDispatch] = useReducer(answerReducer, ANSWERS_STATE)
 
   useEffect(() => {
-    const baseURL = `https://opentdb.com/api.php?amount=${initialState.numberOfQuestion}`
-    getQuestions(baseURL)
+    getQuestions(urlGeneratorHelper(initialState))
 
     return () => {
       abortController.abort()
     }
-  }, [initialState.numberOfQuestion])
+  }, [initialState])
 
-  const getQuestions = async (url: string) => {
+  const getQuestions = async (url: any) => {
     try {
       quizDispatch({ type: 'FETCH_PENDING' })
       const response = await fetch(url, { signal: signal })
