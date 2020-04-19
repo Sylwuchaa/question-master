@@ -36,7 +36,7 @@ export const Subtitle = styled.h2`
   font-weight: bold;
 `
 const SummaryViewContianer = styled.div`
-  display: flex;  
+  display: flex;
   flex-direction: row;
 `
 
@@ -50,17 +50,17 @@ const MenuButton = styled.div`
   height: 5rem;
   border: 0.3rem solid gray;
   border-radius: 3rem;
-  background-color: ${props => props.theme.colors.white};
+  background-color: ${(props) => props.theme.colors.white};
   cursor: pointer;
 
   &:hover {
-    background-color: ${props => props.theme.colors.black};;
+    background-color: ${(props) => props.theme.colors.black};
   }
 `
 
 const StyledBack = styled(Back)`
- ${MenuButton}:hover & {
-    fill: ${props => props.theme.colors.white}
+  ${MenuButton}:hover & {
+    fill: ${(props) => props.theme.colors.white};
   }
 `
 
@@ -82,11 +82,10 @@ export const Summary: React.FC = () => {
     quizDispatch({ type: 'PUSH_PATH_TO_HISTORY', payload: history.location.pathname })
     quizDispatch({ type: 'RESET_QUIZ_STATE' })
     inputsDispatch({ type: 'RESET_INPUTS_VALUE' })
-    history.push("/preparingQuiz")
+    history.push('/preparingQuiz')
   }
 
   return (
-    <>
     <SummaryViewContianer>
       <MenuContainer>
         <MenuButton>
@@ -135,7 +134,6 @@ export const Summary: React.FC = () => {
           </SectionSummaryElement>
         </SummaryElement>
       </SummaryContainer>
-      </SummaryViewContianer>
-    </>
+    </SummaryViewContianer>
   )
 }
