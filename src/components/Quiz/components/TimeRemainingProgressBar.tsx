@@ -9,15 +9,16 @@ const Progress = styled.progress`
 type Props = {
     millisecondsRemaining: number;
     max: string;
+    color: string;
 }
 
-export const TimeRemainingProgressBar: React.FC<Props> = ({ millisecondsRemaining, max }) => {
+export const TimeRemainingProgressBar: React.FC<Props> = ({ millisecondsRemaining, max, color }) => {
 
     const progressBarRef = useRef<HTMLProgressElement>(null)
   return (
     <Progress
       ref={progressBarRef}
-      className="progress is-danger is-large"
+      className={`progress ${color} is-large`}
       value={millisecondsRemaining}
       max={max}
     />

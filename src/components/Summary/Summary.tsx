@@ -41,7 +41,7 @@ const SummaryViewContianer = styled.div`
 `
 export const Summary: React.FC = () => {
   const globalContext = useContext(GlobalContext)
-  const { quizState, quizDispatch, initialState } = globalContext
+  const { quizState, quizDispatch, initialState, inputsDispatch } = globalContext
   const history = useHistory()
 
   useEffect(() => {
@@ -51,12 +51,21 @@ export const Summary: React.FC = () => {
     }
   }, [])
 
+  const handleBackButton = () => {
+    quizDispatch({ type: 'RESET_TIME_REMAINING' })
+    quizDispatch({ type: 'RESET_ACTIVE_QUESTION' })
+    quizDispatch({ type: 'PUSH_PATH_TO_HISTORY', payload: history.location.pathname })
+    quizDispatch({ type: 'RESET_QUIZ_STATE' })
+    inputsDispatch({ type: 'RESET_INPUTS_VALUE' })
+    history.push("/preparingQuiz")
+  }
+
   return (
     <>
     <SummaryViewContianer>
       <MenuContainer>
         <MenuButton>
-          <Back onClick={() => history.push('/preparingQuiz')} />
+          <Back onClick={handleBackButton} />
         </MenuButton>
       </MenuContainer>
       <SummaryContainer>

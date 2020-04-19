@@ -1,26 +1,10 @@
-import React, {
-  useEffect,
-  useContext,
-  useRef,
-  ChangeEvent,
-} from 'react'
+import React, { useEffect, useContext, useRef, ChangeEvent } from 'react'
 import styled from 'styled-components'
-import {
-  ButtonContainer,
-  PrepareContainer,
-} from '../../styled/components/GlobalComponents'
+import { ButtonContainer, PrepareContainer } from '../../styled/components/GlobalComponents'
 import { GlobalContext } from '../../App'
 import { Link, useHistory } from 'react-router-dom'
 import { TimeRemainingProgressBar } from '../Quiz/components/TimeRemainingProgressBar'
 
-const QuizContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  width: 40%;
-  height: 55%;
-`
 const AnswerListElm = styled.li`
   text-decoration: none;
   list-style: none;
@@ -37,9 +21,9 @@ const Header = styled.header`
   justify-content: center;
   align-items: center;
   text-align: center;
-  padding: 25px;
   width: 100%;
-  height: 50%;
+  min-height: 20%;
+  max-height: 20%;
 `
 const Input = styled.input`
   width: 30px;
@@ -50,6 +34,13 @@ const Input = styled.input`
 `
 const Label = styled.label`
   cursor: pointer;
+`
+const Info = styled.div`
+  font-weight: bold;
+  margin: 0;
+`
+const Question = styled.div`
+  font-size: 1.5rem;
 `
 export type QuizConfig = '1500' | ('500' & string)
 const maxTimeRemaining: QuizConfig = '500'
@@ -164,36 +155,38 @@ export const Quiz: React.FC = () => {
 
   return (
     <>
-      <TimeRemainingProgressBar
-        millisecondsRemaining={quizState.millisecondsRemaining}
-        max={maxTimeRemaining}
-      />
       <PrepareContainer>
-        {quizState.millisecondsRemaining}
+        <TimeRemainingProgressBar
+          color={"is-danger"}
+          millisecondsRemaining={quizState.millisecondsRemaining}
+          max={maxTimeRemaining}
+        />
         <h1 className="title">
           {quizState.activeQuestion + 1} / {initialState.numberOfQuestion}
         </h1>
-          #{quizState.questionData[quizState.activeQuestion].category}
-          <Header className="card-header">
-            <div className="notification is-primary">
-              {quizState.loading ? (
-                <h3 className="title is-3">Loading. . .</h3>
-              ) : (
-                <h3 className="title is-3">
-                  {quizState.questionData[quizState.activeQuestion].question}
-                </h3>
-              )}
-            </div>
-          </Header>
-          <div className="card-content">
-            <div className="content">
-              {quizState.loading ? (
-                <AnswerListElm className="subtitle is-3">Loading. . . </AnswerListElm>
-              ) : (
-                <List>{randerAnswerListElement()}</List>
-              )}
-            </div>
+        <Info className="notification is-info">
+          #{quizState.questionData[quizState.activeQuestion].category} Difficulty: {quizState.questionData[quizState.activeQuestion].difficulty}
+        </Info>
+        <Header className="card-header">
+          <div className="notification is-primary">
+            {quizState.loading ? (
+              <h3 className="title is-3">Loading. . .</h3>
+            ) : (
+              <Question>
+                {quizState.questionData[quizState.activeQuestion].question}
+              </Question>
+            )}
           </div>
+        </Header>
+        <div className="card-content">
+          <div className="content">
+            {quizState.loading ? (
+              <AnswerListElm className="subtitle is-3">Loading. . . </AnswerListElm>
+            ) : (
+              <List>{randerAnswerListElement()}</List>
+            )}
+          </div>
+        </div>
         <ButtonContainer>
           <button
             type="submit"
@@ -207,16 +200,13 @@ export const Quiz: React.FC = () => {
               Back/ Reset Quiz
             </button>
           </Link>
-          <h1 className="title">
-            {quizState.activeQuestion + 1} / {initialState.numberOfQuestion}
-          </h1>
         </ButtonContainer>
+        <TimeRemainingProgressBar
+          color={"is-info"}
+          millisecondsRemaining={quizState.activeQuestion + 1}
+          max={initialState.numberOfQuestion}
+        />
       </PrepareContainer>
-      <progress
-        className="progress is-info is-large"
-        value={quizState.activeQuestion + 1}
-        max={initialState.numberOfQuestion}
-      ></progress>
     </>
   )
 }
