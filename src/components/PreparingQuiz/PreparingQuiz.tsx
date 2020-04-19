@@ -50,7 +50,7 @@ const StyledFormContainer = styled.div`
 
 export const PreparingQuiz: React.FC = () => {
   const globalContext = useContext(GlobalContext)
-  const { quizDispatch, initialState, inputsDispatch } = globalContext
+  const { quizDispatch, initialState, inputsDispatch, quizState } = globalContext
   const numberOfQuestionInput = useRef<HTMLInputElement>(null)
   const history = useHistory()
 
@@ -135,9 +135,8 @@ export const PreparingQuiz: React.FC = () => {
                 </SelectInput>
               </SelectInputContainer>
             </InputContainer>
-
             <ButtonContainer>
-              <button onClick={handleValidate} className="button is-primary is-large is-rounded">
+              <button disabled={quizState.loading ? true : false} onClick={handleValidate} className="button is-primary is-large is-rounded">
                 Let's Start !
               </button>
               <button
