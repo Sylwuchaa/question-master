@@ -1,7 +1,7 @@
 import React, { ChangeEvent, useContext, useRef } from 'react'
 import styled from 'styled-components'
 import { SelectCategory } from './components/SelectCategory'
-import { AppContainer, ButtonContainer, MenuContainer, MenuButton } from '../../styled/components/GlobalComponents'
+import { AppContainer, ButtonContainer, MenuContainer } from '../../styled/components/GlobalComponents'
 import { GlobalContext } from '../../App'
 import { useHistory } from 'react-router-dom'
 import { ReactComponent as Power } from '../../assets/start-button.svg'
@@ -47,6 +47,29 @@ const StyledFormContainer = styled.div`
   align-items: center;
   margin-right: 10%;
 `
+const MenuButton = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 5rem;
+  margin-left: 5rem;
+  width: 5em;
+  height: 5rem;
+  border: 0.3rem solid gray;
+  border-radius: 3rem;
+  background-color: ${props => props.theme.colors.white};
+  cursor: pointer;
+
+  &:hover {
+    background-color: ${props => props.theme.colors.black};
+  }
+`;
+
+const StyledPower = styled(Power)`
+  ${MenuButton}:hover & {
+    fill: ${props => props.theme.colors.white};
+  }
+`
 
 export const PreparingQuiz: React.FC = () => {
   const globalContext = useContext(GlobalContext)
@@ -77,7 +100,7 @@ export const PreparingQuiz: React.FC = () => {
     <AppContainer>
       <MenuContainer>
         <MenuButton>
-          <Power onClick={() => history.push('/')} />
+          <StyledPower onClick={() => history.push('/')} />
         </MenuButton>
       </MenuContainer>
       <StyledRightContainer>

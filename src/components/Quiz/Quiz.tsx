@@ -28,7 +28,7 @@ const Header = styled.header`
 const Input = styled.input`
   width: 30px;
   height: 30px;
-  background: #ffffff;
+  background: ${props => props.theme.colors.white};;
   border-radius: 10px;
   cursor: pointer;
 `

@@ -3,7 +3,7 @@ import { GlobalContext } from '../../App'
 import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 import { ReactComponent as Back } from '../../assets/return.svg'
-import { MenuContainer, MenuButton } from '../../styled/components/GlobalComponents'
+import { MenuContainer } from '../../styled/components/GlobalComponents'
 
 export const SummaryContainer = styled.div`
   display: flex;
@@ -39,6 +39,31 @@ const SummaryViewContianer = styled.div`
   display: flex;  
   flex-direction: row;
 `
+
+const MenuButton = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 5rem;
+  margin-left: 5rem;
+  width: 5em;
+  height: 5rem;
+  border: 0.3rem solid gray;
+  border-radius: 3rem;
+  background-color: ${props => props.theme.colors.white};
+  cursor: pointer;
+
+  &:hover {
+    background-color: ${props => props.theme.colors.black};;
+  }
+`
+
+const StyledBack = styled(Back)`
+ ${MenuButton}:hover & {
+    fill: ${props => props.theme.colors.white}
+  }
+`
+
 export const Summary: React.FC = () => {
   const globalContext = useContext(GlobalContext)
   const { quizState, quizDispatch, initialState, inputsDispatch } = globalContext
@@ -65,7 +90,7 @@ export const Summary: React.FC = () => {
     <SummaryViewContianer>
       <MenuContainer>
         <MenuButton>
-          <Back onClick={handleBackButton} />
+          <StyledBack onClick={handleBackButton} />
         </MenuButton>
       </MenuContainer>
       <SummaryContainer>
