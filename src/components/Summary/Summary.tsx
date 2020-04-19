@@ -50,17 +50,17 @@ const MenuButton = styled.div`
   height: 5rem;
   border: 0.3rem solid gray;
   border-radius: 3rem;
-  background-color: #ffffff;
+  background-color: ${props => props.theme.colors.white};
   cursor: pointer;
 
   &:hover {
-    background-color: #000000;
+    background-color: ${props => props.theme.colors.black};;
   }
 `
 
 const StyledBack = styled(Back)`
  ${MenuButton}:hover & {
-    fill: #ffffff
+    fill: ${props => props.theme.colors.white}
   }
 `
 
