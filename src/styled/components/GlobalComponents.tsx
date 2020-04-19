@@ -40,7 +40,7 @@ export const AppContainer = styled.div`
 export const PrepareContainer = styled.div`
   display: flex;
   flex-direction: column;
-  height: 94.6vh;
+  height: 100vh;
   width: 100vw;
   display: flex;
   justify-content: center;
