@@ -160,7 +160,7 @@ export const PreparingQuiz: React.FC = () => {
             </InputContainer>
             <ButtonContainer>
               <button disabled={quizState.loading ? true : false} onClick={handleValidate} className="button is-primary is-large is-rounded">
-                Let's Start !
+                { quizState.loading ? 'Loading...' : 'Let\'s Start !' }
               </button>
               <button
                 onClick={handleResetFormInputsValue}
