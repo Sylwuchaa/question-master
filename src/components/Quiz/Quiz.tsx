@@ -3,12 +3,9 @@ import React, {
   useContext,
   useRef,
   ChangeEvent,
-  FormEvent,
-  FormHTMLAttributes,
 } from 'react'
 import styled from 'styled-components'
 import {
-  AppContainer,
   ButtonContainer,
   PrepareContainer,
 } from '../../styled/components/GlobalComponents'
@@ -88,11 +85,11 @@ export const Quiz: React.FC = () => {
   }, [quizState.millisecondsRemaining, quizState.activeQuestion])
 
   const handleForStartTimeRemaining = () => {
-    if (quizState.millisecondsRemaining < 5000) {
+    if (quizState.millisecondsRemaining < 500) {
       return quizDispatch({ type: 'START_TIME_REMAINING' })
     }
 
-    if (quizState.millisecondsRemaining === 5000) {
+    if (quizState.millisecondsRemaining === 500) {
       return handleNextButton()
     }
 
@@ -176,7 +173,7 @@ export const Quiz: React.FC = () => {
         <h1 className="title">
           {quizState.activeQuestion + 1} / {initialState.numberOfQuestion}
         </h1>
-        <QuizContainer className="card">
+          #{quizState.questionData[quizState.activeQuestion].category}
           <Header className="card-header">
             <div className="notification is-primary">
               {quizState.loading ? (
@@ -197,7 +194,6 @@ export const Quiz: React.FC = () => {
               )}
             </div>
           </div>
-        </QuizContainer>
         <ButtonContainer>
           <button
             type="submit"

@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from 'styled-components'
 
 export const TitleContainer = styled.div`
   height: 100vh;
@@ -8,7 +8,25 @@ export const TitleContainer = styled.div`
   justify-content: center;
   align-items: center;
   flex-direction: row;
-  background-color: #D6BCFA;
+`
+export const MenuContainer = styled.div`
+  display: flex;
+  width: 10%;
+  height: 100%;
+  flex-direction: column;
+`
+export const MenuButton = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 5rem;
+  margin-left: 5rem;
+  width: 5em;
+  height: 5rem;
+  border: 0.3rem solid gray;
+  border-radius: 3rem;
+  background-color: #ffffff;
+  cursor: pointer;
 `
 export const AppContainer = styled.div`
   display: flex;
@@ -18,17 +36,15 @@ export const AppContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #D6BCFA;
 `
 export const PrepareContainer = styled.div`
   display: flex;
   flex-direction: column;
-  height: 94.27vh;
+  height: 94.6vh;
   width: 100vw;
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #D6BCFA;
 `
 export const ButtonContainer = styled.div`
   display: flex;
@@ -49,7 +65,6 @@ export const Label = styled.label`
   font-weight: 400;
 `
 export const SelectInput = styled.select`
-width: 100%;
-font-size: 1rem;
+  width: 100%;
+  font-size: 1rem;
 `
-

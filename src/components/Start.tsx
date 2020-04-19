@@ -12,21 +12,21 @@ const SceneContainer = styled.div`
   width: 75%;
   height: 75%;
 `
-
-const Box = styled.div`
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  width: 100%;
-  height: 100%;
-`
-
 const StartContainer = styled.div`
   display: flex;
   justify-content: flex-end;
   align-items: center;
   width: 50%;
   height: 50%;
+`
+
+const StyledContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100vh;
 `
 
 export const Start: React.FC = () => {
@@ -60,7 +60,9 @@ export const Start: React.FC = () => {
   }, [])
 
   return (
-    <TitleContainer>
+    // <TitleContainer>
+    <>
+    <StyledContainer>
       <StartContainer>
         <section className="hero">
           <div className="hero-body">
@@ -77,6 +79,7 @@ export const Start: React.FC = () => {
       <SceneContainer ref={scene}>
         <Scene />
       </SceneContainer>
-    </TitleContainer>
+      </StyledContainer>
+    </>
   )
 }
