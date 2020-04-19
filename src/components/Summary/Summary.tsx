@@ -2,20 +2,23 @@ import React, { useContext, useEffect } from 'react'
 import { GlobalContext } from '../../App'
 import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
+import { ReactComponent as Back } from '../../assets/return.svg'
+import { MenuContainer, MenuButton } from '../../styled/components/GlobalComponents'
 
 export const SummaryContainer = styled.div`
   display: flex;
-  width: 100%;
   height: 100vh;
-  justify-content: space-evenly;
+  width: 90%;
   flex-direction: column;
+  margin-right: 10%;
+  justify-content: space-around;
   align-items: center;
 `
 export const SummaryElement = styled.div`
   display: flex;
   height: 15%;
-  width: 20%;
-  margin: 2rem 0 2rem 0;
+  min-width: 25%;
+  margin: 1rem 0 1rem 0;
 `
 export const SectionSummaryElement = styled.section`
   display: flex;
@@ -23,22 +26,22 @@ export const SectionSummaryElement = styled.section`
   height: 100%;
 `
 export const Title = styled.h1`
-  font-size: 2.5rem;
+  text-align: center;
+  font-size: 1.7rem;
+  font-weight: 500;
 `
-
 export const Subtitle = styled.h2`
-  font-size: 2rem;
+  font-size: 1.7rem;
+  text-align: center;
+  font-weight: bold;
+`
+const SummaryViewContianer = styled.div`
+  display: flex;  
+  flex-direction: row;
 `
 export const Summary: React.FC = () => {
   const globalContext = useContext(GlobalContext)
-  const {
-    quizState,
-    quizDispatch,
-    initialState,
-    inputsDispatch,
-    answerState,
-    answerDispatch,
-  } = globalContext
+  const { quizState, quizDispatch, initialState } = globalContext
   const history = useHistory()
 
   useEffect(() => {
@@ -50,6 +53,12 @@ export const Summary: React.FC = () => {
 
   return (
     <>
+    <SummaryViewContianer>
+      <MenuContainer>
+        <MenuButton>
+          <Back onClick={() => history.push('/preparingQuiz')} />
+        </MenuButton>
+      </MenuContainer>
       <SummaryContainer>
         <SummaryElement>
           <SectionSummaryElement className="hero is-info">
@@ -92,6 +101,7 @@ export const Summary: React.FC = () => {
           </SectionSummaryElement>
         </SummaryElement>
       </SummaryContainer>
+      </SummaryViewContianer>
     </>
   )
 }
