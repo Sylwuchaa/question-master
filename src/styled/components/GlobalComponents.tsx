@@ -15,19 +15,6 @@ export const MenuContainer = styled.div`
   height: 100%;
   flex-direction: column;
 `
-export const MenuButton = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-top: 5rem;
-  margin-left: 5rem;
-  width: 5em;
-  height: 5rem;
-  border: 0.3rem solid gray;
-  border-radius: 3rem;
-  background-color: #ffffff;
-  cursor: pointer;
-`
 export const AppContainer = styled.div`
   display: flex;
   flex-direction: row;
