@@ -10,11 +10,27 @@ import { Summary } from './components/Summary/Summary'
 export const GlobalContext = React.createContext<any>({})
 
 function App() {
-  const { quizState, initialState, quizDispatch, inputsDispatch, answerState, answerDispatch, } = useGlobalReducer()
+  const {
+    quizState,
+    initialState,
+    quizDispatch,
+    inputsDispatch,
+    answerState,
+    answerDispatch,
+  } = useGlobalReducer()
   return (
     <Router>
       <Switch>
-        <GlobalContext.Provider value={{ quizState, initialState, quizDispatch, inputsDispatch, answerState, answerDispatch }}>
+        <GlobalContext.Provider
+          value={{
+            quizState,
+            initialState,
+            quizDispatch,
+            inputsDispatch,
+            answerState,
+            answerDispatch,
+          }}
+        >
           <Route exact path="/" component={Start} />
           <Route path="/preparingQuiz" component={PreparingQuiz} />
           <Route path="/quiz" component={Quiz} />

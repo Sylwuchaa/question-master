@@ -1,7 +1,11 @@
 import React, { ChangeEvent, useContext, useRef } from 'react'
 import styled from 'styled-components'
 import { SelectCategory } from './components/SelectCategory'
-import { AppContainer, ButtonContainer, MenuContainer } from '../../styled/components/GlobalComponents'
+import {
+  AppContainer,
+  ButtonContainer,
+  MenuContainer,
+} from '../../styled/components/GlobalComponents'
 import { GlobalContext } from '../../App'
 import { useHistory } from 'react-router-dom'
 import { ReactComponent as Power } from '../../assets/start-button.svg'
@@ -57,17 +61,17 @@ const MenuButton = styled.div`
   height: 5rem;
   border: 0.3rem solid gray;
   border-radius: 3rem;
-  background-color: ${props => props.theme.colors.white};
+  background-color: ${(props) => props.theme.colors.white};
   cursor: pointer;
 
   &:hover {
-    background-color: ${props => props.theme.colors.black};
+    background-color: ${(props) => props.theme.colors.black};
   }
-`;
+`
 
 const StyledPower = styled(Power)`
   ${MenuButton}:hover & {
-    fill: ${props => props.theme.colors.white};
+    fill: ${(props) => props.theme.colors.white};
   }
 `
 
@@ -159,8 +163,12 @@ export const PreparingQuiz: React.FC = () => {
               </SelectInputContainer>
             </InputContainer>
             <ButtonContainer>
-              <button disabled={quizState.loading ? true : false} onClick={handleValidate} className="button is-primary is-large is-rounded">
-                { quizState.loading ? 'Loading...' : 'Let\'s Start !' }
+              <button
+                disabled={quizState.loading ? true : false}
+                onClick={handleValidate}
+                className="button is-primary is-large is-rounded"
+              >
+                {quizState.loading ? 'Loading...' : "Let's Start !"}
               </button>
               <button
                 onClick={handleResetFormInputsValue}

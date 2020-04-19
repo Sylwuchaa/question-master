@@ -28,7 +28,7 @@ const Header = styled.header`
 const Input = styled.input`
   width: 30px;
   height: 30px;
-  background: ${props => props.theme.colors.white};;
+  background: ${(props) => props.theme.colors.white};
   border-radius: 10px;
   cursor: pointer;
 `
@@ -157,7 +157,7 @@ export const Quiz: React.FC = () => {
     <>
       <PrepareContainer>
         <TimeRemainingProgressBar
-          color={"is-danger"}
+          color={'is-danger'}
           millisecondsRemaining={quizState.millisecondsRemaining}
           max={maxTimeRemaining}
         />
@@ -165,16 +165,15 @@ export const Quiz: React.FC = () => {
           {quizState.activeQuestion + 1} / {initialState.numberOfQuestion}
         </h1>
         <Info className="notification is-info">
-          #{quizState.questionData[quizState.activeQuestion].category} Difficulty: {quizState.questionData[quizState.activeQuestion].difficulty}
+          #{quizState.questionData[quizState.activeQuestion].category} Difficulty:{' '}
+          {quizState.questionData[quizState.activeQuestion].difficulty}
         </Info>
         <Header className="card-header">
           <div className="notification is-primary">
             {quizState.loading ? (
               <h3 className="title is-3">Loading. . .</h3>
             ) : (
-              <Question>
-                {quizState.questionData[quizState.activeQuestion].question}
-              </Question>
+              <Question>{quizState.questionData[quizState.activeQuestion].question}</Question>
             )}
           </div>
         </Header>
@@ -202,7 +201,7 @@ export const Quiz: React.FC = () => {
           </Link>
         </ButtonContainer>
         <TimeRemainingProgressBar
-          color={"is-info"}
+          color={'is-info'}
           millisecondsRemaining={quizState.activeQuestion + 1}
           max={initialState.numberOfQuestion}
         />
