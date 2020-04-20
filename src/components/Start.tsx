@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import { ReactComponent as Scene } from '../assets/scene.svg'
 import gsap from 'gsap'
+import { Login } from '../auth/Login'
 
 const SceneContainer = styled.div`
   display: flex;
@@ -26,6 +27,12 @@ const StyledContainer = styled.div`
   width: 100%;
   height: 100vh;
 `
+const StyledLoginContainer = styled.div`
+  display: flex;
+  width: 20%;
+  height: 100%;
+  flex-direction: row;
+`
 
 export const Start: React.FC = () => {
   const scene = useRef<HTMLDivElement | null>(null)
@@ -48,7 +55,11 @@ export const Start: React.FC = () => {
         timeLine
           .fromTo(person, { x: '+=400' }, { x: '-=400', autoAlpha: 1 })
           .fromTo(torch, { scaleY: 0 }, { duration: 0.6, autoAlpha: 1, scale: 1 }, '-=0.25')
-          .fromTo(haze.children, { scale: 0.4 }, { duration: 0.3, scale: 1, autoAlpha: 1, stagger: 0.1 })
+          .fromTo(
+            haze.children,
+            { scale: 0.4 },
+            { duration: 0.3, scale: 1, autoAlpha: 1, stagger: 0.1 }
+          )
           .to(questionMark, { duration: 2, autoAlpha: 1 })
       }
     }
@@ -58,6 +69,10 @@ export const Start: React.FC = () => {
 
   return (
     <StyledContainer>
+      <StyledLoginContainer>
+        <Login />
+      </StyledLoginContainer>
+
       <StartContainer>
         <section className="hero">
           <div className="hero-body">
