@@ -15,7 +15,7 @@
     "@types/styled-components": "^5.0.1",
     "bulma": "^0.8.1",
     "firebase": "^7.14.1",
-    "gsap": "^3.2.6",
+    "gsap": "^3.6.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-redux": "^7.2.0",
